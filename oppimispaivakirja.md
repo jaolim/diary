@@ -44,6 +44,10 @@ Tein projektin käyttäen expon blank typescript templatea ```npx create-expo-ap
 
 - Eri sivut ovat *SQLiteProviderin* providerin sisällä ja tietokannan käsittelyyn käytetään *useSQLiteContext* kontekstia.
 
+**Commit 5:** added learning diary
+
+- Päivitän oppimispäiväkirjaa projektin edetessä markdown tiedostoon
+
 Tähän asti tulleet toiminnallisuudet olin kokeillut jo testiprojektissa, joten ongelmia ei juuri tullut vastaan.
 
 Projetkin rakenne (App.tsx return kohta):
