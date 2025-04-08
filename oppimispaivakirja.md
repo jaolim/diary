@@ -42,7 +42,7 @@ Tein projektin käyttäen expon blank typescript templatea ```npx create-expo-ap
 
 **Commit 4:** Added SQLiteDatabase and some functions for testing it
 
-- Eri sivut ovat *SQLiteProviderin* providerin sisällä ja tietokannan käsittelyyn käytetään *useSQLiteContext* kontekstia.
+- Eri sivut ovat *SQLiteProviderin* providerin sisällä ja tietokannan käsittelyyn käytetään *useSQLiteContext* hookkia.
 
 **Commit 5:** added learning diary
 
