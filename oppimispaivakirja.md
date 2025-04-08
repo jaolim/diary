@@ -28,7 +28,7 @@ Käytän lähtökohtana projektin commit viestejä ja lisään omilla kommenteil
 
 ### 08.04.2025
 
-Olin jo aiemmin pyöritellyt eri moduueleja testiprojektissa varmistaakseni niiden yhteensopivuuden, mutta tässä kohtaan aloitin varsinaisen lopputyöprojektin
+Olin jo aiemmin pyöritellyt eri moduuleja testiprojektissa varmistaakseni niiden yhteensopivuuden, mutta tässä kohtaan aloitin varsinaisen lopputyöprojektin
 
 Tein projektin käyttäen expon blank typescript templatea ```npx create-expo-app diary -- template blank-typescript```.
 
@@ -62,6 +62,7 @@ Projetkin rakenne (App.tsx return kohta):
 			</Stack.Navigator>
 		</NavigationContainer>
 	</SQLiteProvider>
+</PaperProvider>
 ```
 
 - Itse komponenttien sisältö on vielä täysin testivaiheessa
