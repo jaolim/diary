@@ -1,8 +1,7 @@
-import { FlatList, Text, View } from "react-native";
-import { useState } from "react";
+import { FlatList, Pressable, Text, TouchableOpacity, View } from "react-native";
+import { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Appbar } from "react-native-paper";
 import { useSQLiteContext } from "expo-sqlite";
 import { Button } from "react-native-paper";
 
@@ -10,10 +9,10 @@ import { NavigatorParams } from "../resources/customTypes";
 import { Story } from "../resources/customTypes";
 import styles from "../resources/styles"
 
-type homeScreenProp = StackNavigationProp<NavigatorParams>;
+type navigatorProp = StackNavigationProp<NavigatorParams>;
 
 export default function HomeScreen() {
-    const navigation = useNavigation<homeScreenProp>();
+    const navigation = useNavigation<navigatorProp>();
     const db = useSQLiteContext();
     const [stories, setStories] = useState<Story[]>()
 
@@ -44,17 +43,20 @@ export default function HomeScreen() {
 
     const resetDB = async () => {
         try {
-            await db.runAsync('DELETE FROM stories')
+            await db.runAsync('DROP TABLE stories')
         } catch (error) {
             console.error(error);
         }
         getStories();
     }
 
+    useEffect(() => {
+        getStories();
+    }, [])
+
     return (
         <View style={styles.center}>
-            <Text>HomeScreen</Text>
-            <Text>Will be implemented shortly!</Text>
+            <Text>Stories timeline</Text>
             <Button mode="contained" onPress={() => navigation.navigate('NewStory')} >
                 New Story
             </Button>
@@ -65,11 +67,23 @@ export default function HomeScreen() {
                 Test Reset DB
             </Button>
             <FlatList
-                keyExtractor={item => item.id.toString()}
+                keyExtractor={item => item.id}
                 renderItem={({ item }) =>
-                    <View>
-                        <Text>ID: {item.id}, Time: {item.time}, Header: {item.header}, Body: {item.body}</Text>
-                    </View>
+                    <TouchableOpacity
+                        onPress={() => {
+                            navigation.navigate('ViewStory', {id: item.id});
+                        }}
+                    >
+                        <View style={styles.borderBlue}>
+
+                            <Text>ID: {item.id}</Text>
+                            <Text>Time: {item.time}</Text>
+                            <Text>Header: {item.header}</Text>
+                            <Text>Body: {item.body}</Text>
+
+                        </View>
+                    </TouchableOpacity>
+
                 }
                 data={stories}
             />

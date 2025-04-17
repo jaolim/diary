@@ -5,6 +5,7 @@ import { SQLiteDatabase, SQLiteProvider } from 'expo-sqlite';
 
 import HomeScreen from './screens/homeScreen';
 import NewStory from './screens/newStory';
+import ViewStory from './screens/viewStory';
 
 import { NavigatorParams } from './resources/customTypes'
 
@@ -14,10 +15,10 @@ const initializeDatabase = async (db: SQLiteDatabase) => {
   try {
     await db.execAsync(`
       CREATE TABLE IF NOT EXISTS stories (
-        id INTEGER,
+        id TEXT,
         time TEXT,
-        header STRING,
-        body STRING
+        header TEXT,
+        body TEXT
       );
       `
     );
@@ -34,6 +35,7 @@ export default function App() {
           <Stack.Navigator>
             <Stack.Screen name="Home" component={HomeScreen} />
             <Stack.Screen name="NewStory" component={NewStory} />
+            <Stack.Screen name="ViewStory" component={ViewStory} />
           </Stack.Navigator>
         </NavigationContainer>
       </SQLiteProvider>

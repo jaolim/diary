@@ -66,3 +66,11 @@ Projetkin rakenne (App.tsx return kohta):
 ```
 
 - Itse komponenttien sisältö on vielä täysin testivaiheessa
+
+17.04.2025
+
+**Commit 6:** Added added timestamp and ID generation logic for stories and a view page for them selectable from the rendered flatlist
+
+- Klikattava FlatList toteutettu TouchableOpacity wrapperillä
+- Aikaan käytetään day.js:ää ja se tallennataan stringinä formatoituna ISO muotoon
+- ID koostuu aika + header stringeistä
