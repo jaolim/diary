@@ -6,6 +6,7 @@ import { SQLiteDatabase, SQLiteProvider } from 'expo-sqlite';
 import HomeScreen from './screens/homeScreen';
 import NewStory from './screens/newStory';
 import ViewStory from './screens/viewStory';
+import Camera from './screens/camera';
 
 import { NavigatorParams } from './resources/customTypes'
 
@@ -18,7 +19,8 @@ const initializeDatabase = async (db: SQLiteDatabase) => {
         id TEXT,
         time TEXT,
         header TEXT,
-        body TEXT
+        body TEXT,
+        image TEXT
       );
       `
     );
@@ -36,6 +38,7 @@ export default function App() {
             <Stack.Screen name="Home" component={HomeScreen} />
             <Stack.Screen name="NewStory" component={NewStory} />
             <Stack.Screen name="ViewStory" component={ViewStory} />
+            <Stack.Screen name="Camera" component={Camera} />
           </Stack.Navigator>
         </NavigationContainer>
       </SQLiteProvider>

@@ -16,12 +16,22 @@ export default StyleSheet.create({
     inputBody: {
         marginTop: 10,
         marginBottom: 10,
-        height: 400,
+        height: 200,
         width: 300
     },
     inputTitle: {
         marginTop: 10,
         marginBottom: 10,
         width: 200,
-    }
+    },
+    margin: {
+        margin: 5
+    },
+    row: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginLeft: 5,
+        marginRight: 5,
+    },
 })

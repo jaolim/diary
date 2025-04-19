@@ -17,10 +17,12 @@ export default function HomeScreen() {
     const [stories, setStories] = useState<Story[]>()
 
     const exampleStory = {
-        id: 0,
+        id: '0',
         time: "123",
         header: "Example Story",
         body: "Body of text\nThis should be on a new line.",
+        image: "Test Image",
+        imageName: "Test Image Name"
     }
 
     const getStories = async () => {
@@ -34,7 +36,7 @@ export default function HomeScreen() {
 
     const saveStory = async () => {
         try {
-            await db.runAsync('INSERT INTO stories (id, time, header, body) VALUES (?, ?, ?, ?)', exampleStory.id, exampleStory.time, exampleStory.header, exampleStory.body)
+            await db.runAsync('INSERT INTO stories (id, time, header, body, image) VALUES (?, ?, ?, ?, ?)', exampleStory.id, exampleStory.time, exampleStory.header, exampleStory.body, exampleStory.image)
         } catch (error) {
             console.error('Could not add story', error);
         }
@@ -42,8 +44,13 @@ export default function HomeScreen() {
     }
 
     const resetDB = async () => {
+        /* try {
+             await db.runAsync('DROP table stories')
+         } catch (error) {
+             console.error(error);
+         } */
         try {
-            await db.runAsync('DROP TABLE stories')
+            await db.runAsync('DELETE from stories')
         } catch (error) {
             console.error(error);
         }
@@ -51,27 +58,28 @@ export default function HomeScreen() {
     }
 
     useEffect(() => {
+        //resetDB();
         getStories();
     }, [])
 
     return (
         <View style={styles.center}>
             <Text>Stories timeline</Text>
-            <Button mode="contained" onPress={() => navigation.navigate('NewStory')} >
-                New Story
-            </Button>
-            <Button mode="contained" onPress={saveStory}>
-                Test Add
-            </Button>
-            <Button mode="contained" onPress={resetDB}>
-                Test Reset DB
-            </Button>
+                <Button style={styles.margin} mode="contained" onPress={() => navigation.navigate('NewStory', { img: '-1' })} >
+                    New Story
+                </Button>
+                <Button style={styles.margin} mode="contained" onPress={saveStory}>
+                    Test Add
+                </Button>
+                <Button style={styles.margin} mode="contained" onPress={resetDB}>
+                    Test Reset DB
+                </Button>
             <FlatList
                 keyExtractor={item => item.id}
                 renderItem={({ item }) =>
                     <TouchableOpacity
                         onPress={() => {
-                            navigation.navigate('ViewStory', {id: item.id});
+                            navigation.navigate('ViewStory', { id: item.id });
                         }}
                     >
                         <View style={styles.borderBlue}>
@@ -80,6 +88,7 @@ export default function HomeScreen() {
                             <Text>Time: {item.time}</Text>
                             <Text>Header: {item.header}</Text>
                             <Text>Body: {item.body}</Text>
+                            <Text>Image: {item.image}</Text>
 
                         </View>
                     </TouchableOpacity>

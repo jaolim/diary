@@ -1,7 +1,8 @@
 export type NavigatorParams = {
     Home: undefined;
-    NewStory: undefined;
+    NewStory: {img: string, storyId?:string};
     ViewStory: {id: string};
+    Camera: {storyId: string};
 }
 
 export type Story = {
@@ -9,5 +10,7 @@ export type Story = {
     time: string,
     header: string,
     body?: string,
+    image?: string,
+    imageName?: string
 }
 

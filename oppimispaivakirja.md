@@ -74,3 +74,13 @@ Projetkin rakenne (App.tsx return kohta):
 - Klikattava FlatList toteutettu TouchableOpacity wrapperillä
 - Aikaan käytetään day.js:ää ja se tallennataan stringinä formatoituna ISO muotoon
 - ID koostuu aika + header stringeistä
+
+20.04.2025
+**Commit 7:** Added camera screen for taking pictures.
+
+- TODO: Lisättävä pysyvä tallennus kuville
+
+Tässä kohdassa tuli ensimmäinen huomattava ongelma vastaan; kuvan tallennus SQLite tietokantaan base64 muodosa kaataa appin.
+En ole vielä päättänyt pyrinkö saamaan suoran tallennuksen SQLiteen onnistumaan, tallennanko jotenkin muuten paikallisesti ja lisään vain viittauksen SQLite tietokantaan, vai siirränkö koko tietokannan verkkoon ja tallennan sinne.
+Muuten logiikka tietokannan lisäysten suhteen on kunnossa, joten muiden toiminnallisuuksien kehitys onnistuu, vaikka tämän ratkaisu jätettäisiin myöhemmälle.
+
