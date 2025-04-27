@@ -1,8 +1,7 @@
 export type NavigatorParams = {
     Home: undefined;
-    NewStory: {img: string, storyId?:string};
+    NewStory: undefined;
     ViewStory: {id: string};
-    Camera: {storyId: string};
 }
 
 export type Story = {

@@ -25,6 +25,8 @@ Jaoettelen suunnitellut ominaisuudet eri kategorioihin tärkeyden mukaan, joista
 ## Oppimispäiväkirjan rakenne
 
 Käytän lähtökohtana projektin commit viestejä ja lisään omilla kommenteille kontekstia jos siihen on tarvetta.
+Numerointi on selkeyden vuoksi hieman eri, kuin projektissa, koska tähän listaan vain merkittävät commitit.
+Täysi commit historia löytyy projektin repositioriosta.
 
 ### 08.04.2025
 
@@ -83,4 +85,9 @@ Projetkin rakenne (App.tsx return kohta):
 Tässä kohdassa tuli ensimmäinen huomattava ongelma vastaan; kuvan tallennus SQLite tietokantaan base64 muodosa kaataa appin.
 En ole vielä päättänyt pyrinkö saamaan suoran tallennuksen SQLiteen onnistumaan, tallennanko jotenkin muuten paikallisesti ja lisään vain viittauksen SQLite tietokantaan, vai siirränkö koko tietokannan verkkoon ja tallennan sinne.
 Muuten logiikka tietokannan lisäysten suhteen on kunnossa, joten muiden toiminnallisuuksien kehitys onnistuu, vaikka tämän ratkaisu jätettäisiin myöhemmälle.
+
+27.04.2025
+**Commit 8:** Removed camera screen and added its functionality directly to newStory screen via a toggleable <Modal> element.
+
+- Tällä tavoin ei tarvitse miettiä kuvien siirtelyä screenien väliä ennen niiden tallentamista.
 
