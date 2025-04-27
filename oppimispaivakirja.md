@@ -87,7 +87,7 @@ En ole vielä päättänyt pyrinkö saamaan suoran tallennuksen SQLiteen onnistu
 Muuten logiikka tietokannan lisäysten suhteen on kunnossa, joten muiden toiminnallisuuksien kehitys onnistuu, vaikka tämän ratkaisu jätettäisiin myöhemmälle.
 
 27.04.2025
-**Commit 8:** Removed camera screen and added its functionality directly to newStory screen via a toggleable <Modal> element.
+**Commit 8:** Removed camera screen and added its functionality directly to newStory screen via a toggleable <Modal> element
 
 - Tällä tavoin ei tarvitse miettiä kuvien siirtelyä screenien väliä ennen niiden tallentamista.
 

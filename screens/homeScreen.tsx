@@ -8,7 +8,6 @@ import { Button } from "react-native-paper";
 import { NavigatorParams } from "../resources/customTypes";
 import { Story } from "../resources/customTypes";
 import styles from "../resources/styles"
-import { usePhoto } from "../resources/PhotoContext";
 
 
 type navigatorProp = StackNavigationProp<NavigatorParams>;
@@ -17,7 +16,6 @@ export default function HomeScreen() {
     const navigation = useNavigation<navigatorProp>();
     const db = useSQLiteContext();
     const [stories, setStories] = useState<Story[]>()
-    const { photo } = usePhoto();
 
     const exampleStory = {
         id: '0',
@@ -69,7 +67,7 @@ export default function HomeScreen() {
         <View style={styles.center}>
             <Text>Stories timeline</Text>
             <View style={styles.row}>
-                <Button style={styles.margin} mode="contained" onPress={() => navigation.navigate('NewStory', { img: '-1' })} >
+                <Button style={styles.margin} mode="contained" onPress={() => navigation.navigate('NewStory')} >
                     New Story
                 </Button>
                 <Button style={styles.margin} mode="contained" onPress={saveStory}>
