@@ -9,7 +9,6 @@ export type Story = {
     time: string,
     header: string,
     body?: string,
-    image?: string,
-    imageName?: string
+    image: string,
 }
 

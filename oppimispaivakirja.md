@@ -78,6 +78,7 @@ Projetkin rakenne (App.tsx return kohta):
 - ID koostuu aika + header stringeistä
 
 20.04.2025
+
 **Commit 7:** Added camera screen for taking pictures.
 
 - TODO: Lisättävä pysyvä tallennus kuville
@@ -87,7 +88,16 @@ En ole vielä päättänyt pyrinkö saamaan suoran tallennuksen SQLiteen onnistu
 Muuten logiikka tietokannan lisäysten suhteen on kunnossa, joten muiden toiminnallisuuksien kehitys onnistuu, vaikka tämän ratkaisu jätettäisiin myöhemmälle.
 
 27.04.2025
+
 **Commit 8:** Removed camera screen and added its functionality directly to newStory screen via a toggleable <Modal> element
 
 - Tällä tavoin ei tarvitse miettiä kuvien siirtelyä screenien väliä ennen niiden tallentamista.
+
+28.04.2025
+
+**Commit 9:** Added file system storage support via expo-file-system module for permanently storing photos with URI stored in the SQLite db for fetching them.
+
+- Kuvat renderöityvät ehdollisesti HomeScreen FlatListiin ja ViewStory screeniin.
+
+Tämä oli ratkaisuni *Commit 7* kohdassa tulleseen ongelmaan kuvien tallennukseen.
 

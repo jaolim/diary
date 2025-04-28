@@ -13,6 +13,11 @@ export default StyleSheet.create({
         flex: 1,
         alignItems: 'center',
     },
+    column: {
+        flexDirection: "column",
+        padding: 5,
+        margin: 5
+    },
     inputBody: {
         marginTop: 10,
         marginBottom: 10,
@@ -33,5 +38,14 @@ export default StyleSheet.create({
         alignItems: "center",
         marginLeft: 5,
         marginRight: 5,
+    },
+    rowBorderBlue: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginLeft: 5,
+        marginRight: 5,
+        borderWidth: 2,
+        borderColor: "blue"
     },
 })

@@ -6,6 +6,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { CameraView, useCameraPermissions } from "expo-camera";
 import { useNavigation } from "@react-navigation/native";
 import dayjs from "dayjs";
+import * as FileSystem from 'expo-file-system';
 
 import { Story, NavigatorParams } from "../resources/customTypes";
 import styles from "../resources/styles"
@@ -14,46 +15,49 @@ import HomeScreen from "./homeScreen";
 type navigatorProp = StackNavigationProp<NavigatorParams>;
 
 export default function NewStory({ route }: any) {
+    const time = dayjs().toISOString();
     const db = useSQLiteContext();
     const navigation = useNavigation<navigatorProp>();
-    const time = dayjs().toISOString();
     const [header, setHeader] = useState("");
     const [body, setBody] = useState("");
     const [isDisabled, setIsDisabled] = useState(false);
-    const [imageName, setImageName] = useState();
-    const [imageBase64, setImageBase64] = useState();
+    const [imageKey, setImageKey] = useState('-1')
+    const [imageId, setImageId] = useState('-1')
+    const [imageName, setImageName] = useState('');
+    const [imageBase64, setImageBase64] = useState('');
     const [permission, requestPermission] = useCameraPermissions();
     const [modalVisible, setModalVisible] = useState(true)
     const camera = useRef(null)
+    const directory = `${FileSystem.documentDirectory}diary/`
 
     const snap = async () => {
         if (camera) {
             const photo = await camera.current.takePictureAsync({ base64: true });
             setImageName(photo.uri);
             setImageBase64(photo.base64);
+            setImageId(`Photo_User_${time}`)
         }
     }
-
     const saveStory = async () => {
 
-        if (route.params.img != '-1') {
-            try {
-                await db.runAsync(
-                    'UPDATE stories SET header = (?), body = (?), time = (?) WHERE id = (?)', header, body, time, route.params.storyId
-                )
-            } catch (error) {
-                console.error('Could not add story', error);
-            }
-        } else {
-            try {
-                await db.runAsync('INSERT INTO stories (id, time, header, body, image) VALUES (?, ?, ?, ?, ?)', time + 'User', time, header, body, '-1')
-            } catch (error) {
-                console.error('Could not add story', error);
-            }
-
+        try {
+            await db.runAsync('INSERT INTO stories (id, time, header, body, image) VALUES (?, ?, ?, ?, ?)', time + 'User', time, header, body, imageKey)
+        } catch (error) {
+            console.error('Could not add story', error);
         }
+
         setIsDisabled(true)
         navigation.navigate('Home')
+    }
+
+    const saveImage = async () => {
+        const path = `${directory}${imageId}.jpg`
+        try {
+            await FileSystem.copyAsync({ from: imageName, to: path })
+            setImageKey(path)
+        } catch (error) {
+            console.error('Could not save image', error)
+        }
     }
 
     if (!permission) {
@@ -100,6 +104,7 @@ export default function NewStory({ route }: any) {
                         onChangeText={text => setBody(text)}
                     />
                     <Image style={{ flex: 1, minWidth: "100%" }} source={{ uri: `data:image/jpg;base64,${imageBase64}` }} />
+                    <Text>{JSON.stringify(imageKey)}</Text>
                     <View style={styles.row}>
                         <Button mode="contained" onPress={saveStory}>
                             Add Story
@@ -110,12 +115,21 @@ export default function NewStory({ route }: any) {
                             Take Picture
                         </Button>
                         <Button mode="contained" onPress={() => {
+                            if (imageKey != '-1') {
+                                FileSystem.deleteAsync(imageKey)
+                            }
                             navigation.navigate('Home')
                         }}>
                             Exit
                         </Button>
                     </View>
-                    <Text>{JSON.stringify(route.params)}</Text>
+                    <View style={styles.row}>
+                        <Button mode="contained" onPress={() => {
+                            saveImage();
+                        }}>
+                            Accept picture
+                        </Button>
+                    </View>
                 </View>
             </Modal>
 
@@ -126,17 +140,38 @@ export default function NewStory({ route }: any) {
                         <Image style={{ flex: 1, minWidth: "100%" }} source={{ uri: `data:image/jpg;base64,${imageBase64}` }} />
                     </>
                 ) : (
-                    <Text>Take a picture!. {JSON.stringify(route.params)}</Text>
+                    <Text>Take a picture!.</Text>
                 )}
             </View>
+            <Text>{JSON.stringify(imageName)}</Text>
             <View style={styles.row}>
                 <Button style={styles.margin} mode="contained" onPress={snap}>
                     Take Picture
                 </Button>
-                <Button style={styles.margin} mode="contained" onPress={() => setModalVisible(true)}>
+                <Button style={styles.margin} mode="contained" onPress={() =>
+                    setModalVisible(true)
+                }>
                     Close Camera
                 </Button>
             </View>
         </View>
     )
 }
+
+
+/*
+                        <Button mode="contained" onPress={() => {
+                            storeImage();
+                        }}>
+                            Store image
+                        </Button>
+                        <Button mode="contained" onPress={() => {
+                            fetchImage();
+                        }}>
+                            Fetch image
+                        </Button>
+*/
+
+/*
+                    <Image style={{ flex: 1, minWidth: "100%" }} source={{ uri: `data:image/jpg,${imageKey}` }} />
+*/

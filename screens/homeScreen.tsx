@@ -1,9 +1,11 @@
-import { FlatList, Pressable, Text, TouchableOpacity, View } from "react-native";
+import { FlatList, Image, Pressable, Text, TouchableOpacity, View } from "react-native";
 import { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useSQLiteContext } from "expo-sqlite";
 import { Button } from "react-native-paper";
+
+import * as FileSystem from 'expo-file-system';
 
 import { NavigatorParams } from "../resources/customTypes";
 import { Story } from "../resources/customTypes";
@@ -16,14 +18,14 @@ export default function HomeScreen() {
     const navigation = useNavigation<navigatorProp>();
     const db = useSQLiteContext();
     const [stories, setStories] = useState<Story[]>()
+    const directory = `${FileSystem.documentDirectory}diary`
 
     const exampleStory = {
         id: '0',
         time: "123",
         header: "Example Story",
         body: "Body of text\nThis should be on a new line.",
-        image: "Test Image",
-        imageName: "Test Image Name"
+        image: "-1",
     }
 
     const getStories = async () => {
@@ -55,7 +57,12 @@ export default function HomeScreen() {
         } catch (error) {
             console.error(error);
         }
+        deletePictures();
         getStories();
+    }
+
+    const deletePictures = async () => {
+        FileSystem.deleteAsync(directory)
     }
 
     useEffect(() => {
@@ -77,6 +84,11 @@ export default function HomeScreen() {
                     Reset DB
                 </Button>
             </View>
+            <View style={styles.row}>
+                <Button style={styles.margin} mode="contained" onPress={deletePictures}>
+                    Delete Pictures
+                </Button>
+            </View>
             <FlatList
                 keyExtractor={item => item.id}
                 renderItem={({ item }) =>
@@ -86,14 +98,20 @@ export default function HomeScreen() {
                         }}
                     >
                         <View style={styles.borderBlue}>
-
+                            {item.image != '-1' ? (
+                                <>
+                                    <Image style={{ height: 80, width: 80 }} source={{ uri: item.image }} />
+                                </>
+                            ) : (
+                                null
+                            )}
                             <Text>ID: {item.id}</Text>
                             <Text>Time: {item.time}</Text>
                             <Text>Header: {item.header}</Text>
                             <Text>Body: {item.body}</Text>
                             <Text>Image: {item.image}</Text>
-
                         </View>
+
                     </TouchableOpacity>
 
                 }
