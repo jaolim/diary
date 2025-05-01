@@ -15,6 +15,7 @@ export type Story = {
     header: string,
     body: string,
     image: string,
+    private: boolean
 }
 
 export type User = {

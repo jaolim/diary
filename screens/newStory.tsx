@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { Image, Modal, Text, View } from "react-native";
-import { Button, TextInput } from "react-native-paper";
+import { Button, TextInput, ToggleButton } from "react-native-paper";
 import { useSQLiteContext } from "expo-sqlite";
 import { StackNavigationProp } from '@react-navigation/stack';
 import { CameraView, useCameraPermissions } from "expo-camera";
@@ -13,6 +13,9 @@ import styles from "../resources/styles"
 import { useAuth } from "../resources/useAuth";
 
 type navigatorProp = StackNavigationProp<NavigatorParams>;
+type Camera = {
+    takePictureAsync: any
+}
 
 export default function NewStory({ route }: any) {
     const time = dayjs().toISOString();
@@ -29,21 +32,29 @@ export default function NewStory({ route }: any) {
     const [modalVisible, setModalVisible] = useState(true)
     const camera = useRef(null)
     const directory = `${FileSystem.documentDirectory}diary/`
-
     const { user } = useAuth();
+
+    const [status, setStatus] = useState('unchecked');
+    const [isPrivate, setIsPrivate] = useState(false)
+
+    const onButtonToggle = () => {
+        setStatus(status === 'unchecked' ? 'checked' : 'unchecked');
+        setIsPrivate(isPrivate === false ? true: false)
+    }
 
     const snap = async () => {
         if (camera) {
-            const photo = await camera.current?.takePictureAsync({ base64: true });
+            const photo = await camera.current!.takePictureAsync({ base64: true });
             setImageName(photo.uri);
             setImageBase64(photo.base64);
             setImageId(`Photo_User_${time}`)
         }
     }
+
     const saveStory = async () => {
 
         try {
-            await db.runAsync('INSERT INTO stories (id, user, time, header, body, image) VALUES (?, ?, ?, ?, ?, ?)', time + user, user, time, header, body, imageKey)
+            await db.runAsync('INSERT INTO stories (id, user, time, header, body, image, private) VALUES (?, ?, ?, ?, ?, ?, ?)', time + user, user, time, header, body, imageKey, isPrivate)
         } catch (error) {
             console.error('Could not add story', error);
         }
@@ -82,7 +93,6 @@ export default function NewStory({ route }: any) {
             </View>
         )
     }
-
     return (
         <View style={styles.center}>
             <Modal
@@ -91,14 +101,34 @@ export default function NewStory({ route }: any) {
                 visible={modalVisible}
             >
                 <View style={styles.center}>
-                    <TextInput
-                        style={styles.inputTitle}
-                        label="Title"
-                        disabled={isDisabled}
-                        value={header}
-                        onChangeText={text => setHeader(text)}
-                    />
-                    <Text>{user}</Text>
+                    <Text style={{ color: "blue" }}>{user}</Text>
+                    <View style={styles.row}>
+                        <TextInput
+                            style={styles.inputTitle}
+                            label="Title"
+                            disabled={isDisabled}
+                            value={header}
+                            onChangeText={text => setHeader(text)}
+                        />
+                        <ToggleButton
+                            icon='adjust'
+                            value='private'
+                            status={status}
+                            onPress={onButtonToggle}
+                        />
+                        <Text>
+                            {status == 'unchecked' ? (
+                                'Public'
+                            ) : (
+                                'Private'
+                            )}
+                        </Text>
+                    </View>
+                    {isPrivate == true ? (
+                        <Text>True</Text>
+                    ):(
+                        <Text>False</Text>
+                    )}
                     <TextInput
                         style={styles.inputBody}
                         label="Story"
@@ -108,6 +138,18 @@ export default function NewStory({ route }: any) {
                     />
                     <Image style={{ flex: 1, minWidth: "100%" }} source={{ uri: `data:image/jpg;base64,${imageBase64}` }} />
                     <Text>{JSON.stringify(imageKey)}</Text>
+                    <View style={styles.row}>
+                        {imageName != '' ? (
+                            <Button mode="contained" onPress={() => {
+                                saveImage();
+                            }}>
+                                Accept picture
+                            </Button>
+
+                        ) : (
+                            null
+                        )}
+                    </View>
                     <View style={styles.row}>
                         <Button mode="contained" onPress={saveStory}>
                             Add Story
@@ -124,13 +166,6 @@ export default function NewStory({ route }: any) {
                             navigation.navigate('Home')
                         }}>
                             Exit
-                        </Button>
-                    </View>
-                    <View style={styles.row}>
-                        <Button mode="contained" onPress={() => {
-                            saveImage();
-                        }}>
-                            Accept picture
                         </Button>
                     </View>
                 </View>

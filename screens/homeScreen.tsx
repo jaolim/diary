@@ -34,6 +34,7 @@ export default function HomeScreen() {
         header: "Example Story",
         body: "Body of text\nThis should be on a new line.",
         image: "-1",
+        private: false
     }
 
     const testUser = {
@@ -44,7 +45,7 @@ export default function HomeScreen() {
 
     const getStories = async () => {
         try {
-            const list = await db.getAllAsync('SELECT * from stories');
+            const list = await db.getAllAsync('SELECT * from stories WHERE user = (?) OR private = false', user);
             setStories(list as Story[]);
         } catch (error) {
             console.error('Could not get stories', error);
@@ -62,7 +63,7 @@ export default function HomeScreen() {
 
     const saveStory = async () => {
         try {
-            await db.runAsync('INSERT INTO stories (id, user, time, header, body, image) VALUES (?, ?, ?, ?, ?, ?)', exampleStory.id, exampleStory.user, exampleStory.time, exampleStory.header, exampleStory.body, exampleStory.image)
+            await db.runAsync('INSERT INTO stories (id, user, time, header, body, image, private) VALUES (?, ?, ?, ?, ?, ?, ?)', exampleStory.id, exampleStory.user, exampleStory.time, exampleStory.header, exampleStory.body, exampleStory.image, exampleStory.private)
         } catch (error) {
             console.error('Could not add story', error);
         }
@@ -131,8 +132,8 @@ export default function HomeScreen() {
 
     const handleSubmit = () => {
         login('Tester', 'Password')
+        getStories();
     }
-
 
     return (
         <View style={styles.center}>
@@ -212,6 +213,7 @@ export default function HomeScreen() {
                             <Text>Header: {item.header}</Text>
                             <Text>Body: {item.body}</Text>
                             <Text>Image: {item.image}</Text>
+                            <Text>Private: {item.private}</Text>
                         </View>
 
                     </TouchableOpacity>

@@ -36,8 +36,7 @@ export default StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        marginLeft: 5,
-        marginRight: 5,
+        margin: 5,
     },
     rowBorderBlue: {
         flexDirection: "row",

@@ -111,7 +111,34 @@ Tämä oli ratkaisuni *Commit 7* kohdassa tulleseen ongelmaan kuvien tallennukse
 
 - Salasanat tallennetaan selkokielisinä, eli nykyinen toteutus on tietoturvallisuudeltaan hyvin puutteellinen.
 
+
+### 02.05.2025
+
+**Commit 12:** Added private: boolean to Story type and updated fetch logic for stories table to only include public stories or private stories from active user
+
+
+**Tilannepäivitys speksien suhteen:**
+
+Alkuperäisistä ydinominaisuukista on nyt teknisesti toteutettu 1 ja 2.
+Ominaisuus 3, eli tarinoiden tallennus pilveen, olisi suhteellisen helposti toteutettavissa yksinkertaisessa muodossa, mutta mielekäs toteutus vaatisi myös tietoturvallisemman tavan hoitaa salasanojen tallennus.
+Lisäksi jo yksinkertaisella toteutuksella olisi potentiaalia aiheuttaa useita aikaa vieviä ongelmakohtia, koska jo tämä tarkoittaisi kahden eri tilassa olevan tietokannan välistä ylläpitoa, joten jätän tämän tavoitteen pienemmälle prioriteetille.
+
+Uudistetut prioriteetit:
+1. Käyttöliittymä
+2. Tarinoiden paikannus Maa + Paikkakunta tägeillä
+3. Tarinoiden filteröinti
+4. Tarinoiden kommentointi
+5. Pilvitoiminnallisuus (ja ennakkovaatimuksena tietoturvallisempi login toiminnallisuus)
+
+Tällä hetkellä uskon toteuttavani näistä 1 varmuudella, 2 todennäköisesti, 3 mahdollisesti ja 4+ epätodennäköisesti, koska oletan siinä kohdassa katsovani aikani olevan paremmin käytetty esimerkiksi käyttöliittymän ulkoasun parannuksiin.
+
+**Expo tilanne**
+
+Expo 53 olisi saatavilla, mutta päädyin tällä hetkellä pitämään projektini expo 52:ssa. Tämä saattaa vielä muuttua, ja tulen todennäköisesti projektin valmistuttua katsomaan, saanko päivityksen onnistumaan kivuttomasti.
+
 ## Lähteet
+
+Pitääkseni lähdemerkinnät mielekkäinä, olen listannut vain ne lähteet, joilla on ollut merkittävä merkitys koodini rakenteeseen.
 
 Juha Hinkula. [Mobile Programming Course - kurssimateriaali](https://haagahelia.github.io/mobilecourse/docs/intro/)
 

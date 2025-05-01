@@ -9,7 +9,8 @@ export const initializeDatabase = async (db: SQLiteDatabase) => {
         time TEXT,
         header TEXT,
         body TEXT,
-        image TEXT
+        image TEXT,
+        private BOOLEAN
       );
       `
     );

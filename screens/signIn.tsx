@@ -17,14 +17,15 @@ export default function Signin() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const db = useSQLiteContext();
+    const [isDisabled, setIsDisabled] = useState(false);
 
     return (
-        <View>
+        <View style={styles.center}>
+            <Text style={{color:"blue"}}>{user}</Text>
             <Text>Login Screen</Text>
-            <Text>{user}</Text>
             <View style={styles.row}>
                 <Button style={styles.margin} mode="contained" onPress={logout}>
-                    Test Logout
+                    Logout
                 </Button>
                 <Button style={styles.margin} mode="contained" onPress={async () => await login(username, password)}>
                     Login
@@ -38,12 +39,14 @@ export default function Signin() {
                 label="Name"
                 value={username}
                 onChangeText={text => setUsername(text)}
+                disabled={isDisabled}
             />
             <TextInput
                 style={styles.inputTitle}
                 label="Password"
                 value={password}
                 onChangeText={text => setPassword(text)}
+                disabled={isDisabled}
             />
         </View>
     )
