@@ -107,6 +107,9 @@ Tämä oli ratkaisuni *Commit 7* kohdassa tulleseen ongelmaan kuvien tallennukse
 
 - Contextiin ja hookkin käytetty lähteenä Net Ninjan Youtube tutoriaaleja [Complete React Native Tutorial #14 - Making an Auth Context](https://www.youtube.com/watch?v=Ky43ve3b9Ss) ja [Complete React Native Tutorial #15 - Logging Users In](https://www.youtube.com/watch?v=RcrWlOgL1hM)
 
+**Commit 11:** Added logic for login validation and a table for tracking an active user.
+
+- Salasanat tallennetaan selkokielisinä, eli nykyinen toteutus on tietoturvallisuudeltaan hyvin puutteellinen.
 
 ## Lähteet
 

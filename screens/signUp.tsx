@@ -10,11 +10,13 @@ import { NavigatorParams } from "../resources/customTypes";
 import { useState } from "react";
 import { useSQLiteContext } from "expo-sqlite";
 
+import { User } from "../resources/customTypes";
+
 type navigatorProp = StackNavigationProp<NavigatorParams>;
 
 export default function Signup() {
     const navigation = useNavigation<navigatorProp>();
-    const { user, login, logout } = useAuth();
+    const { user, login, logout, register } = useAuth();
     const [users, setUsers] = useState<string[] | unknown[]>([]);
     const db = useSQLiteContext();
     const [username, setUsername] = useState('');
@@ -22,7 +24,7 @@ export default function Signup() {
 
     const getUsers = async () => {
         try {
-            const list = await db.getAllAsync('SELECT name from users');
+            const list = await db.getAllAsync('SELECT name from users') as User[];
             setUsers(list.map(({ name }) => name));
         } catch (error) {
             console.error('Cannot read user database', error)
@@ -33,14 +35,9 @@ export default function Signup() {
         if (users.includes(name)) {
             alert('Choose a unique username')
         } else {
-            try {
-                await db.runAsync('INSERT into users (name, password) VALUES (?, ?)', name, password)
-
-            } catch (error) {
-                console.error('Could not add user', error)
-            }
+            register(name, password)
+            login(name, password)
         }
-        login(name, password)
         getUsers();
     }
 

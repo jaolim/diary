@@ -13,11 +13,16 @@ export type Story = {
     user: string,
     time: string,
     header: string,
-    body?: string,
+    body: string,
     image: string,
 }
 
 export type User = {
     name: string,
     password: string
+}
+
+
+export type ActiveUser = {
+    name: string
 }

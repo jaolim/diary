@@ -4,8 +4,9 @@ import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useSQLiteContext } from "expo-sqlite";
 import { Button } from "react-native-paper";
-
 import * as FileSystem from 'expo-file-system';
+
+import { initializeDatabase } from "../resources/initializeDatabase";
 
 import { NavigatorParams } from "../resources/customTypes";
 import { Story } from "../resources/customTypes";
@@ -24,11 +25,11 @@ export default function HomeScreen() {
     const [users, setUsers] = useState()
     const directory = `${FileSystem.documentDirectory}diary`
 
-    const { user, login, logout } = useAuth();
+    const { active, user, login, logout } = useAuth();
 
     const exampleStory = {
         id: '0',
-        user: 'Testaaja',
+        user: user,
         time: "123",
         header: "Example Story",
         body: "Body of text\nThis should be on a new line.",
@@ -55,7 +56,7 @@ export default function HomeScreen() {
             const list = await db.getAllAsync('SELECT * from users');
             setUsers(list as any);
         } catch (error) {
-            console.error('Could not get stories', error);
+            console.error('Could not get users', error);
         }
     }
 
@@ -90,32 +91,11 @@ export default function HomeScreen() {
             console.error(error);
         }
         try {
-            await db.execAsync(`
-     CREATE TABLE IF NOT EXISTS stories (
-       id TEXT,
-       user TEXT,
-       time TEXT,
-       header TEXT,
-       body TEXT,
-       image TEXT
-     );
-     `
-            );
+            await db.runAsync('DROP table activeuser')
         } catch (error) {
             console.error(error);
         }
-        try {
-            await db.execAsync(`
-     CREATE TABLE IF NOT EXISTS users (
-       name TEXT,
-       password TEXT
-     );
-     `
-            );
-        } catch (error) {
-            console.error(error);
-        }
-
+        initializeDatabase(db);
 
         try {
             await db.runAsync('DELETE from stories')
@@ -127,9 +107,15 @@ export default function HomeScreen() {
         } catch (error) {
             console.error(error);
         }
+        try {
+            await db.runAsync('DELETE from activeuser')
+        } catch (error) {
+            console.error(error)
+        }
         deletePictures();
         getUsers();
         getStories();
+        active();
     }
 
     const deletePictures = async () => {
@@ -138,18 +124,27 @@ export default function HomeScreen() {
 
     useEffect(() => {
         //resetDB();
+        active();
         getUsers();
         getStories();
     }, [])
 
     const handleSubmit = () => {
-        login('test', '123')
+        login('Tester', 'Password')
     }
 
 
     return (
         <View style={styles.center}>
-            <Text style={{ color: "blue" }}>{user}</Text>
+            <Text style={{ color: "blue" }}>
+                {user != null ? (
+                    <>
+                        {user}
+                    </>
+                ) : (
+                    'No user logged in'
+                )}
+            </Text>
             <Text>Stories timeline</Text>
             <View style={styles.row}>
                 <Button style={styles.margin} mode="contained" onPress={() => navigation.navigate('NewStory')} >
@@ -184,29 +179,13 @@ export default function HomeScreen() {
                     Logout
                 </Button>
             </View>
-            <Text>
-                {user != null ? (
-                    <>
-                        {user}
-                    </>
-                ) : (
-                    'No user logged in'
-                )}
-            </Text>
             <FlatList
-                keyExtractor={item => item.userId}
+                keyExtractor={item => item.name}
                 renderItem={({ item }) =>
-                    <TouchableOpacity
-                        onPress={() => {
-                            navigation.navigate('ViewStory', { id: item.id });
-                        }}
-                    >
-                        <View style={styles.borderBlue}>
-                            <Text>ID: {item.name}</Text>
-                        </View>
-
-                    </TouchableOpacity>
-
+                    <View style={styles.borderBlue}>
+                        <Text>Name: {item.name}</Text>
+                        <Text>Password: {item.password}</Text>
+                    </View>
                 }
                 data={users}
             />

@@ -7,6 +7,7 @@ import { useAuth } from "../resources/useAuth";
 import styles from "../resources/styles";
 import { NavigatorParams } from "../resources/customTypes";
 import { useState } from "react";
+import { useSQLiteContext } from "expo-sqlite";
 
 type navigatorProp = StackNavigationProp<NavigatorParams>;
 
@@ -15,6 +16,7 @@ export default function Signin() {
     const { user, logout, login } = useAuth();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const db = useSQLiteContext();
 
     return (
         <View>
@@ -24,7 +26,7 @@ export default function Signin() {
                 <Button style={styles.margin} mode="contained" onPress={logout}>
                     Test Logout
                 </Button>
-                <Button style={styles.margin} mode="contained" onPress={() => login(username, password)}>
+                <Button style={styles.margin} mode="contained" onPress={async () => await login(username, password)}>
                     Login
                 </Button>
                 <Button style={styles.margin} mode="contained" onPress={() => navigation.navigate('Home')}>
@@ -45,5 +47,4 @@ export default function Signin() {
             />
         </View>
     )
-
 }

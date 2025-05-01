@@ -4,6 +4,7 @@ import { PaperProvider } from 'react-native-paper';
 import { SQLiteDatabase, SQLiteProvider } from 'expo-sqlite';
 import { createContext, useContext, useState } from 'react';
 
+import { initializeDatabase } from './resources/initializeDatabase';
 
 import HomeScreen from './screens/homeScreen';
 import NewStory from './screens/newStory';
@@ -17,6 +18,7 @@ import { AuthProvider } from './resources/authContext';
 
 const Stack = createStackNavigator<NavigatorParams>();
 
+/*
 const initializeDatabase = async (db: SQLiteDatabase) => {
   try {
     await db.execAsync(`
@@ -31,7 +33,7 @@ const initializeDatabase = async (db: SQLiteDatabase) => {
       `
     );
   } catch (error) {
-    console.error(error);
+    console.error('Could not create table stories', error);
   }
   try {
     await db.execAsync(`
@@ -42,15 +44,27 @@ const initializeDatabase = async (db: SQLiteDatabase) => {
       `
     );
   } catch (error) {
-    console.error(error);
+    console.error('Could not create table users',error);
+  }
+  try {
+    await db.execAsync(`
+      CREATE TABLE IF NOT EXISTS activeuser (
+        name TEXT
+      );
+      `
+    );
+  } catch (error) {
+    console.error('Could not create table activeuser', error);
   }
 }
+
+*/
 
 export default function App() {
   return (
     <PaperProvider>
-      <AuthProvider>
-        <SQLiteProvider databaseName="stories.db" onInit={initializeDatabase}>
+      <SQLiteProvider databaseName="stories.db" onInit={initializeDatabase}>
+        <AuthProvider>
           <NavigationContainer>
             <Stack.Navigator>
               <Stack.Screen name="Home" component={HomeScreen} />
@@ -60,8 +74,8 @@ export default function App() {
               <Stack.Screen name="Signup" component={Signup} />
             </Stack.Navigator>
           </NavigationContainer>
-        </SQLiteProvider>
-      </AuthProvider>
+        </AuthProvider>
+      </SQLiteProvider>
     </PaperProvider>
   )
 }
