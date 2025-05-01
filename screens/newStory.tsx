@@ -13,9 +13,6 @@ import styles from "../resources/styles"
 import { useAuth } from "../resources/useAuth";
 
 type navigatorProp = StackNavigationProp<NavigatorParams>;
-type Camera = {
-    takePictureAsync: any
-}
 
 export default function NewStory({ route }: any) {
     const time = dayjs().toISOString();
