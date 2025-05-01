@@ -57,9 +57,6 @@ export default function ViewStory({ route }: any) {
                 <Button mode="contained" onPress={getStory}>
                     Manual Fetch
                 </Button>
-                <Button mode="contained" onPress={getStory}>
-                    Manual Fetch
-                </Button>
             </View>
         </View>
     )

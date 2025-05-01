@@ -69,7 +69,7 @@ Projetkin rakenne (App.tsx return kohta):
 
 - Itse komponenttien sisältö on vielä täysin testivaiheessa
 
-17.04.2025
+### 17.04.2025
 
 **Commit 6:** Added added timestamp and ID generation logic for stories and a view page for them selectable from the rendered flatlist
 
@@ -77,7 +77,7 @@ Projetkin rakenne (App.tsx return kohta):
 - Aikaan käytetään day.js:ää ja se tallennataan stringinä formatoituna ISO muotoon
 - ID koostuu aika + header stringeistä
 
-20.04.2025
+### 20.04.2025
 
 **Commit 7:** Added camera screen for taking pictures.
 
@@ -87,13 +87,13 @@ Tässä kohdassa tuli ensimmäinen huomattava ongelma vastaan; kuvan tallennus S
 En ole vielä päättänyt pyrinkö saamaan suoran tallennuksen SQLiteen onnistumaan, tallennanko jotenkin muuten paikallisesti ja lisään vain viittauksen SQLite tietokantaan, vai siirränkö koko tietokannan verkkoon ja tallennan sinne.
 Muuten logiikka tietokannan lisäysten suhteen on kunnossa, joten muiden toiminnallisuuksien kehitys onnistuu, vaikka tämän ratkaisu jätettäisiin myöhemmälle.
 
-27.04.2025
+### 27.04.2025
 
 **Commit 8:** Removed camera screen and added its functionality directly to newStory screen via a toggleable <Modal> element
 
 - Tällä tavoin ei tarvitse miettiä kuvien siirtelyä screenien väliä ennen niiden tallentamista.
 
-28.04.2025
+### 28.04.2025
 
 **Commit 9:** Added file system storage support via expo-file-system module for permanently storing photos with URI stored in the SQLite db for fetching them.
 
@@ -101,3 +101,17 @@ Muuten logiikka tietokannan lisäysten suhteen on kunnossa, joten muiden toiminn
 
 Tämä oli ratkaisuni *Commit 7* kohdassa tulleseen ongelmaan kuvien tallennukseen.
 
+### 01.05.2025
+
+**Commit 10:** Added users table to database, custom context and hook for tracking active user, and rudementary sign up and sign in pages.
+
+- Contextiin ja hookkin käytetty lähteenä Net Ninjan Youtube tutoriaaleja [Complete React Native Tutorial #14 - Making an Auth Context](https://www.youtube.com/watch?v=Ky43ve3b9Ss) ja [Complete React Native Tutorial #15 - Logging Users In](https://www.youtube.com/watch?v=RcrWlOgL1hM)
+
+
+## Lähteet
+
+Juha Hinkula. [Mobile Programming Course - kurssimateriaali](https://haagahelia.github.io/mobilecourse/docs/intro/)
+
+Youtube. Net Ninja. [Complete React Native Tutorial #14 - Making an Auth Context](https://www.youtube.com/watch?v=Ky43ve3b9Ss)
+
+Youtube. Net Ninja. [Complete React Native Tutorial #15 - Logging Users In](https://www.youtube.com/watch?v=RcrWlOgL1hM)

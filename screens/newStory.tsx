@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Image, Modal, Text, View } from "react-native";
 import { Button, TextInput } from "react-native-paper";
 import { useSQLiteContext } from "expo-sqlite";
@@ -8,9 +8,9 @@ import { useNavigation } from "@react-navigation/native";
 import dayjs from "dayjs";
 import * as FileSystem from 'expo-file-system';
 
-import { Story, NavigatorParams } from "../resources/customTypes";
+import { NavigatorParams } from "../resources/customTypes";
 import styles from "../resources/styles"
-import HomeScreen from "./homeScreen";
+import { useAuth } from "../resources/useAuth";
 
 type navigatorProp = StackNavigationProp<NavigatorParams>;
 
@@ -30,9 +30,11 @@ export default function NewStory({ route }: any) {
     const camera = useRef(null)
     const directory = `${FileSystem.documentDirectory}diary/`
 
+    const { user } = useAuth();
+
     const snap = async () => {
         if (camera) {
-            const photo = await camera.current.takePictureAsync({ base64: true });
+            const photo = await camera.current?.takePictureAsync({ base64: true });
             setImageName(photo.uri);
             setImageBase64(photo.base64);
             setImageId(`Photo_User_${time}`)
@@ -41,7 +43,7 @@ export default function NewStory({ route }: any) {
     const saveStory = async () => {
 
         try {
-            await db.runAsync('INSERT INTO stories (id, time, header, body, image) VALUES (?, ?, ?, ?, ?)', time + 'User', time, header, body, imageKey)
+            await db.runAsync('INSERT INTO stories (id, user, time, header, body, image) VALUES (?, ?, ?, ?, ?, ?)', time + user, user, time, header, body, imageKey)
         } catch (error) {
             console.error('Could not add story', error);
         }
@@ -96,6 +98,7 @@ export default function NewStory({ route }: any) {
                         value={header}
                         onChangeText={text => setHeader(text)}
                     />
+                    <Text>{user}</Text>
                     <TextInput
                         style={styles.inputBody}
                         label="Story"
@@ -157,21 +160,3 @@ export default function NewStory({ route }: any) {
         </View>
     )
 }
-
-
-/*
-                        <Button mode="contained" onPress={() => {
-                            storeImage();
-                        }}>
-                            Store image
-                        </Button>
-                        <Button mode="contained" onPress={() => {
-                            fetchImage();
-                        }}>
-                            Fetch image
-                        </Button>
-*/
-
-/*
-                    <Image style={{ flex: 1, minWidth: "100%" }} source={{ uri: `data:image/jpg,${imageKey}` }} />
-*/
