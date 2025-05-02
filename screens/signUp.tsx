@@ -1,10 +1,11 @@
 import { useEffect } from "react";
-import { FlatList, Text, View } from "react-native";
-import { Button, TextInput } from "react-native-paper";
+import { ImageBackground, View } from "react-native";
+import { Button, Text, TextInput } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from '@react-navigation/stack';
 
 import { useAuth } from "../resources/useAuth";
+import { useBackground } from "../resources/useBackground";
 import styles from "../resources/styles";
 import { NavigatorParams } from "../resources/customTypes";
 import { useState } from "react";
@@ -21,6 +22,7 @@ export default function Signup() {
     const db = useSQLiteContext();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const { background } = useBackground();
 
     const getUsers = async () => {
         try {
@@ -48,29 +50,34 @@ export default function Signup() {
 
 
     return (
-        <View>
-            <Text>Login Screen</Text>
-            <Text>{user}</Text>
-            <View style={styles.row}>
-                <Button style={styles.margin} mode="contained" onPress={logout}>
-                    Test Logout
-                </Button>
-                <Button style={styles.margin} mode="contained" onPress={() => addUser('Tester', 'Qwerty')}>
-                    Test Add user
-                </Button>
-                <Button style={styles.margin} mode="contained" onPress={() => navigation.navigate('Home')}>
-                    Home
-                </Button>
-            </View>
-            <TextInput
-                style={styles.inputTitle}
-                label="Name"
-                value={username}
-                onChangeText={text => setUsername(text)}
-            />
-            <View style={styles.row}>
+        <ImageBackground source={{ uri: background }} style={styles.center} resizeMode="cover">
+            <View style={styles.center}>
+                <Text style={styles.user}>
+                    {user != null ? (
+                        <>
+                            User: {user}
+                        </>
+                    ) : (
+                        'User: Guest'
+                    )}
+                </Text>
+                <View style={styles.row}>
+                    <Button style={styles.margin} mode="contained" onPress={logout}>
+                        Logout
+                    </Button>
+                    <Button style={styles.margin} mode="contained" onPress={() => navigation.navigate('Home')}>
+                        Home
+                    </Button>
+                </View>
                 <TextInput
                     style={styles.inputTitle}
+                    label="Name"
+                    value={username}
+                    onChangeText={text => setUsername(text)}
+                />
+                <TextInput
+                    style={styles.inputTitle}
+                    secureTextEntry={true}
                     label="Password"
                     value={password}
                     onChangeText={text => setPassword(text)}
@@ -79,10 +86,17 @@ export default function Signup() {
                     Sign up
                 </Button>
             </View>
-            <Text>
-                {JSON.stringify(users)}
-            </Text>
-            <FlatList
+        </ImageBackground>
+    )
+
+}
+
+/*
+                <Button style={styles.margin} mode="contained" onPress={() => addUser('Tester', 'Qwerty')}>
+                    Test Add user
+                </Button>
+
+                            <FlatList
                 renderItem={({ item }) =>
                     <View style={styles.borderBlue}>
                         <Text>Name: {item}</Text>
@@ -90,7 +104,4 @@ export default function Signup() {
                 }
                 data={users}
             />
-        </View>
-    )
-
-}
+*/

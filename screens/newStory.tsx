@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Image, Modal, Text, View } from "react-native";
 import { Button, TextInput, ToggleButton } from "react-native-paper";
 import { useSQLiteContext } from "expo-sqlite";
@@ -27,21 +27,20 @@ export default function NewStory({ route }: any) {
     const [imageBase64, setImageBase64] = useState('');
     const [permission, requestPermission] = useCameraPermissions();
     const [modalVisible, setModalVisible] = useState(true)
-    const camera = useRef(null)
+    const camera = useRef(null) as any
     const directory = `${FileSystem.documentDirectory}diary/`
     const { user } = useAuth();
-
-    const [status, setStatus] = useState('unchecked');
+    const [status, setStatus] = useState<'unchecked' | 'checked'>('unchecked');
     const [isPrivate, setIsPrivate] = useState(false)
 
     const onButtonToggle = () => {
         setStatus(status === 'unchecked' ? 'checked' : 'unchecked');
-        setIsPrivate(isPrivate === false ? true: false)
+        setIsPrivate(isPrivate === false ? true : false)
     }
 
     const snap = async () => {
         if (camera) {
-            const photo = await camera.current!.takePictureAsync({ base64: true });
+            const photo = await camera.current.takePictureAsync({ base64: true });
             setImageName(photo.uri);
             setImageBase64(photo.base64);
             setImageId(`Photo_User_${time}`)
@@ -61,6 +60,9 @@ export default function NewStory({ route }: any) {
     }
 
     const saveImage = async () => {
+        if (imageKey != '-1') {
+            FileSystem.deleteAsync(directory)
+        }
         const path = `${directory}${imageId}.jpg`
         try {
             await FileSystem.copyAsync({ from: imageName, to: path })
@@ -70,11 +72,28 @@ export default function NewStory({ route }: any) {
         }
     }
 
+    const isLogged = () => {
+        if (!user) {
+            setIsDisabled(true);
+        }
+    }
+
+    useEffect(() => {
+        isLogged();
+    }, [])
+
+    if (!user) {
+        <View style={styles.center}>
+            <Text></Text>
+        </View>
+    }
+
     if (!permission) {
         return (
             <View />
         )
     }
+
     if (!permission.granted) {
         return (
             <View style={styles.center}>
@@ -90,6 +109,7 @@ export default function NewStory({ route }: any) {
             </View>
         )
     }
+
     return (
         <View style={styles.center}>
             <Modal
@@ -98,7 +118,14 @@ export default function NewStory({ route }: any) {
                 visible={modalVisible}
             >
                 <View style={styles.center}>
-                    <Text style={{ color: "blue" }}>{user}</Text>
+                    <Text style={styles.user}>
+                        {user != null ? (
+                            <>
+                                User: {user}
+                            </>
+                        ) : (
+                            'User: Guest'
+                        )}</Text>
                     <View style={styles.row}>
                         <TextInput
                             style={styles.inputTitle}
@@ -121,11 +148,6 @@ export default function NewStory({ route }: any) {
                             )}
                         </Text>
                     </View>
-                    {isPrivate == true ? (
-                        <Text>True</Text>
-                    ):(
-                        <Text>False</Text>
-                    )}
                     <TextInput
                         style={styles.inputBody}
                         label="Story"
@@ -133,10 +155,13 @@ export default function NewStory({ route }: any) {
                         value={body}
                         onChangeText={text => setBody(text)}
                     />
-                    <Image style={{ flex: 1, minWidth: "100%" }} source={{ uri: `data:image/jpg;base64,${imageBase64}` }} />
-                    <Text>{JSON.stringify(imageKey)}</Text>
+                    {user ? (
+                        <Image style={{ flex: 1, minWidth: "100%" }} source={{ uri: `data:image/jpg;base64,${imageBase64}` }} />
+                    ):(
+                        <Text>Please log in before submitting stories</Text>
+                    )}
                     <View style={styles.row}>
-                        {imageName != '' ? (
+                        {imageName != '' && imageKey == '-1' ? (
                             <Button mode="contained" onPress={() => {
                                 saveImage();
                             }}>
@@ -148,14 +173,26 @@ export default function NewStory({ route }: any) {
                         )}
                     </View>
                     <View style={styles.row}>
-                        <Button mode="contained" onPress={saveStory}>
-                            Add Story
-                        </Button>
-                        <Button mode="contained" onPress={() => {
-                            setModalVisible(false)
-                        }}>
-                            Take Picture
-                        </Button>
+                        {user ? (
+                            <Button mode="contained" onPress={saveStory}>
+                                Add Story
+                            </Button>
+                        ) : (
+                            null
+                        )}
+                        {user ? (
+                            <Button mode="contained" onPress={() => {
+                                setModalVisible(false)
+                            }}>
+                                Take Picture
+                            </Button>
+                        ) : (
+                            <Button mode="contained" onPress={() => {
+                                navigation.navigate('Signin')
+                            }}>
+                                Login
+                            </Button>
+                        )}
                         <Button mode="contained" onPress={() => {
                             if (imageKey != '-1') {
                                 FileSystem.deleteAsync(imageKey)
@@ -178,7 +215,6 @@ export default function NewStory({ route }: any) {
                     <Text>Take a picture!.</Text>
                 )}
             </View>
-            <Text>{JSON.stringify(imageName)}</Text>
             <View style={styles.row}>
                 <Button style={styles.margin} mode="contained" onPress={snap}>
                     Take Picture

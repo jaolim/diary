@@ -60,6 +60,8 @@ export const AuthProvider = ({ children }: any) => {
     const active = await db.getFirstAsync('SELECT * from activeuser') as ActiveUser
     if (active) {
       setUser(active.name)
+    } else {
+      setUser(null)
     }
   }
 

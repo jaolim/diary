@@ -136,6 +136,11 @@ Tällä hetkellä uskon toteuttavani näistä 1 varmuudella, 2 todennäköisesti
 
 Expo 53 olisi saatavilla, mutta päädyin tällä hetkellä pitämään projektini expo 52:ssa. Tämä saattaa vielä muuttua, ja tulen todennäköisesti projektin valmistuttua katsomaan, saanko päivityksen onnistumaan kivuttomasti.
 
+**Commit 13:** Added functionality for deleting stories if the author is currently logged in, backgroundContext for fetching a random image from NASA's API and passing the url to all screens, <ImageBackground> element to most screens using the fetched picture, cleaned up multiple testing elements, added multiple conditional renders based on login status.
+
+- API kutsussa käytetään NASAn julkista avainta, jonka päivittäinen käyttörajoitus on 50 kutsua per IP.
+
+
 ## Lähteet
 
 Pitääkseni lähdemerkinnät mielekkäinä, olen listannut vain ne lähteet, joilla on ollut merkittävä merkitys koodini rakenteeseen.

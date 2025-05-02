@@ -1,9 +1,10 @@
-import { Text, View } from "react-native";
-import { Button, TextInput } from "react-native-paper";
+import { ImageBackground, View } from "react-native";
+import { Button, Text, TextInput } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from '@react-navigation/stack';
 
-import { useAuth } from "../resources/useAuth";
+import { useAuth } from "../resources/useAuth"
+import { useBackground } from "../resources/useBackground";
 import styles from "../resources/styles";
 import { NavigatorParams } from "../resources/customTypes";
 import { useState } from "react";
@@ -18,36 +19,49 @@ export default function Signin() {
     const [password, setPassword] = useState('');
     const db = useSQLiteContext();
     const [isDisabled, setIsDisabled] = useState(false);
+    const { background } = useBackground();
 
     return (
-        <View style={styles.center}>
-            <Text style={{color:"blue"}}>{user}</Text>
-            <Text>Login Screen</Text>
-            <View style={styles.row}>
-                <Button style={styles.margin} mode="contained" onPress={logout}>
-                    Logout
-                </Button>
+        <ImageBackground source={{ uri: background }} style={styles.center} resizeMode="cover">
+            <View style={styles.center}>
+                <Text style={styles.user} variant="titleLarge">
+                    {user != null ? (
+                        <>
+                            User: {user}
+                        </>
+                    ) : (
+                        'User: Guest'
+                    )}
+                </Text>
+
+                <View style={styles.row}>
+                    <Button style={styles.margin} mode="contained" onPress={() => navigation.navigate('Home')}>
+                        Home
+                    </Button>
+                    <Button style={styles.margin} mode="contained" onPress={logout}>
+                        Logout
+                    </Button>
+                </View>
+                <TextInput
+                    style={styles.inputTitle}
+                    label="Name"
+                    value={username}
+                    onChangeText={text => setUsername(text)}
+                    disabled={isDisabled}
+                />
+                <TextInput
+                    style={styles.inputTitle}
+                    secureTextEntry={true}
+                    label="Password"
+                    value={password}
+                    onChangeText={text => setPassword(text)}
+                    disabled={isDisabled}
+                />
                 <Button style={styles.margin} mode="contained" onPress={async () => await login(username, password)}>
                     Login
                 </Button>
-                <Button style={styles.margin} mode="contained" onPress={() => navigation.navigate('Home')}>
-                    Home
-                </Button>
+
             </View>
-            <TextInput
-                style={styles.inputTitle}
-                label="Name"
-                value={username}
-                onChangeText={text => setUsername(text)}
-                disabled={isDisabled}
-            />
-            <TextInput
-                style={styles.inputTitle}
-                label="Password"
-                value={password}
-                onChangeText={text => setPassword(text)}
-                disabled={isDisabled}
-            />
-        </View>
+        </ImageBackground>
     )
 }

@@ -1,18 +1,26 @@
 import { useEffect, useState } from "react";
-import { Image, Text, View } from "react-native"
-
-import { Button } from "react-native-paper";
+import { ImageBackground, View } from "react-native"
+import { Button, Card, Text } from "react-native-paper";
+import dayjs from "dayjs";
 
 import styles from "../resources/styles"
 import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 import { useSQLiteContext } from "expo-sqlite";
 
+import { useBackground } from "../resources/useBackground";
 import { Story } from "../resources/customTypes";
+import { NavigatorParams } from "../resources/customTypes";
+import { useAuth } from "../resources/useAuth";
+
+type navigatorProp = StackNavigationProp<NavigatorParams>;
 
 export default function ViewStory({ route }: any) {
-    const navigation = useNavigation();
+    const navigation = useNavigation<navigatorProp>();
+    const { background } = useBackground();
     const db = useSQLiteContext();
     const thisId = route.params.id;
+    const { user } = useAuth();
     const [story, setStory] = useState<Story>(
         {
             id: '-1',
@@ -21,6 +29,7 @@ export default function ViewStory({ route }: any) {
             header: '-1',
             body: '-1',
             image: '-1',
+            private: false
         }
     );
 
@@ -33,34 +42,53 @@ export default function ViewStory({ route }: any) {
         }
     }
 
+    const deleteStory = async () => {
+        try {
+            db.runAsync('DELETE from stories WHERE id = (?)', thisId)
+        } catch (error) {
+            console.error('Could not delete story')
+        }
+    }
+
     useEffect(() => {
         getStory();
     }, [])
 
-    if (story.image != '-1') {
-        return (
-            <View style={styles.center}>
-                <Image style={{ flex: 1, minWidth:"100%"}} source={{ uri: story.image }} />
-                <Text>{JSON.stringify(story)}</Text>
-                <Text>ID: {route.params.id}</Text>
-                <View style={styles.row}>
-                    <Button mode="contained" onPress={getStory}>
-                        Manual Fetch
-                    </Button>
-                </View>
-            </View>
-        )
-    }
 
     return (
-        <View style={styles.center}>
-            <Text>{JSON.stringify(story)}</Text>
-            <Text>ID: {route.params.id}</Text>
-            <View style={styles.row}>
-                <Button mode="contained" onPress={getStory}>
-                    Manual Fetch
+        <ImageBackground source={{ uri: background }} style={styles.center} resizeMode="cover">
+            <View style={styles.center}>
+
+                <Button style={styles.margin} mode="contained" onPress={() => navigation.navigate('Home')}>
+                    Home
                 </Button>
+
+                <Card style={{ minWidth: "80%" }}>
+                    <Card.Title title={`${dayjs(story.time).format('DD/MM/YYYY - HH:mm')} by ${story.user}`} />
+                    <Card.Content>
+                        <Text variant="titleLarge">{story.header}</Text>
+                        <Text variant="bodyMedium">{story.body}</Text>
+                    </Card.Content>
+                    {story.image != '-1' ? (
+                        <Card.Cover source={{ uri: story.image }} />
+                    ) : (
+                        null
+                    )}
+                </Card>
+                {user == story.user ? (
+                    <Button style={styles.margin} mode="contained" onPress={
+                        () => {
+                            deleteStory();
+                            navigation.navigate('Home')
+                        }
+                    }>
+                        Delete Story
+                    </Button>
+                ) : (
+                    null
+                )}
             </View>
-        </View>
+        </ImageBackground>
     )
+
 }

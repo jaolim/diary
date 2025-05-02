@@ -8,6 +8,8 @@ export type NavigatorParams = {
 
 export type AuthContextType = any
 
+export type BackgroundContextType = any
+
 export type Story = {
     id: string,
     user: string,

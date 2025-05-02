@@ -47,4 +47,13 @@ export default StyleSheet.create({
         borderWidth: 2,
         borderColor: "blue"
     },
+    title: {
+        backgroundColor: "white",
+        padding: 5
+    },
+    user: {
+        color: "blue",
+        backgroundColor: "white",
+        padding: 5
+    }
 })

@@ -1,10 +1,11 @@
-import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
+import { FlatList, Image, ImageBackground, TouchableOpacity, View } from "react-native";
 import { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useSQLiteContext } from "expo-sqlite";
-import { Button } from "react-native-paper";
+import { Button, Card, Text } from "react-native-paper";
 import * as FileSystem from 'expo-file-system';
+import dayjs from "dayjs";
 
 import { initializeDatabase } from "../resources/initializeDatabase";
 
@@ -12,6 +13,7 @@ import { NavigatorParams } from "../resources/customTypes";
 import { Story } from "../resources/customTypes";
 import styles from "../resources/styles"
 import { useAuth } from "../resources/useAuth";
+import { useBackground } from "../resources/useBackground";
 
 
 
@@ -24,8 +26,8 @@ export default function HomeScreen() {
     const [stories, setStories] = useState<Story[]>()
     const [users, setUsers] = useState()
     const directory = `${FileSystem.documentDirectory}diary`
-
     const { active, user, login, logout } = useAuth();
+    const { background, fetchBackground } = useBackground();
 
     const exampleStory = {
         id: '0',
@@ -128,7 +130,14 @@ export default function HomeScreen() {
         active();
         getUsers();
         getStories();
+        if (!background) {
+            fetchBackground();
+        }
     }, [])
+
+    useEffect(() => {
+        getStories();
+    }, [user])
 
     const handleSubmit = () => {
         login('Tester', 'Password')
@@ -136,50 +145,73 @@ export default function HomeScreen() {
     }
 
     return (
-        <View style={styles.center}>
-            <Text style={{ color: "blue" }}>
-                {user != null ? (
-                    <>
-                        {user}
-                    </>
-                ) : (
-                    'No user logged in'
-                )}
-            </Text>
-            <Text>Stories timeline</Text>
-            <View style={styles.row}>
-                <Button style={styles.margin} mode="contained" onPress={() => navigation.navigate('NewStory')} >
-                    New Story
-                </Button>
-                <Button style={styles.margin} mode="contained" onPress={saveStory}>
-                    Test Add
-                </Button>
-                <Button style={styles.margin} mode="contained" onPress={resetDB}>
-                    Reset DB
-                </Button>
+        <ImageBackground source={{ uri: background }} style={styles.center} resizeMode="cover">
+            <View style={styles.center}>
+                <Text style={styles.user}>
+                    {user != null ? (
+                        <>
+                            User: {user}
+                        </>
+                    ) : (
+                        'User: Guest'
+                    )}
+                </Text>
+                <View style={styles.row}>
+                    <Button style={styles.margin} mode="contained" onPress={() => navigation.navigate('Signin')}>
+                        Login
+                    </Button>
+                    <Button style={styles.margin} mode="contained" onPress={() => navigation.navigate('Signup')}>
+                        Sign up
+                    </Button>
+                    <Button style={styles.margin} mode="contained" onPress={() => logout()}>
+                        Logout
+                    </Button>
+                </View>
+                <View style={styles.row}>
+                    <Button style={styles.margin} mode="contained" onPress={() => navigation.navigate('NewStory')} >
+                        New Story
+                    </Button>
+                    <Button style={styles.margin} mode="contained" onPress={resetDB}>
+                        Reset DB
+                    </Button>
+                </View>
+
+                <Text variant="titleLarge" style={{ backgroundColor: "white", margin: 5 }}>Stories timeline</Text>
+                <FlatList
+                    keyExtractor={item => item.id}
+                    renderItem={({ item }) =>
+                        <TouchableOpacity
+                            onPress={() => {
+                                navigation.navigate('ViewStory', { id: item.id });
+                            }}
+                        >
+                            <View>
+                                <Card style={{ minWidth: "80%", margin: 5 }}>
+                                    <Card.Title title={`${dayjs(item.time).format('DD/MM/YYYY - HH:mm')} by ${item.user}`} />
+                                    <Card.Content>
+                                        <Text variant="titleLarge">{item.header}</Text>
+                                        <Text variant="bodyMedium">{item.body}</Text>
+                                    </Card.Content>
+                                    {item.image != '-1' ? (
+                                        <Card.Cover source={{ uri: item.image }} />
+                                    ) : (
+                                        null
+                                    )}
+                                </Card>
+                            </View>
+                        </TouchableOpacity>
+
+                    }
+                    data={stories}
+                />
+
             </View>
-            <View style={styles.row}>
-                <Button style={styles.margin} mode="contained" onPress={deletePictures}>
-                    Delete Pictures
-                </Button>
-                <Button style={styles.margin} mode="contained" onPress={addTestUser}>
-                    Add test user
-                </Button>
-                <Button style={styles.margin} mode="contained" onPress={handleSubmit}>
-                    Test login
-                </Button>
-            </View>
-            <View style={styles.row}>
-                <Button style={styles.margin} mode="contained" onPress={() => navigation.navigate('Signin')}>
-                    Login screen
-                </Button>
-                <Button style={styles.margin} mode="contained" onPress={() => navigation.navigate('Signup')}>
-                    Sign up screen
-                </Button>
-                <Button style={styles.margin} mode="contained" onPress={() => logout()}>
-                    Logout
-                </Button>
-            </View>
+        </ImageBackground>
+    )
+}
+
+
+/*
             <FlatList
                 keyExtractor={item => item.name}
                 renderItem={({ item }) =>
@@ -191,10 +223,24 @@ export default function HomeScreen() {
                 data={users}
             />
 
-            <FlatList
-                keyExtractor={item => item.id}
-                renderItem={({ item }) =>
-                    <TouchableOpacity
+                <Button style={styles.margin} mode="contained" onPress={saveStory}>
+                    Test Add
+                </Button>
+
+
+            <View style={styles.row}>
+                <Button style={styles.margin} mode="contained" onPress={addTestUser}>
+                    Add test user
+                </Button>
+                <Button style={styles.margin} mode="contained" onPress={handleSubmit}>
+                    Test login
+                </Button>
+                                <Button style={styles.margin} mode="contained" onPress={deletePictures}>
+                    Delete Pictures
+                </Button>
+            </View>
+
+                                <TouchableOpacity
                         onPress={() => {
                             navigation.navigate('ViewStory', { id: item.id });
                         }}
@@ -207,6 +253,18 @@ export default function HomeScreen() {
                             ) : (
                                 null
                             )}
+                            <Card>
+                                <Card.Title title={`${dayjs(item.time).format('DD/MM/YYYY')} - ${item.user}`} />
+                                <Card.Content>
+                                    <Text variant="titleLarge">{item.header}</Text>
+                                    <Text variant="bodyMedium">{item.body}</Text>
+                                </Card.Content>
+                                {item.image != '-1' ? (
+                                    <Card.Cover source={{ uri: item.image }} />
+                                ) : (
+                                    null
+                                )}
+                            </Card>
                             <Text>ID: {item.id}</Text>
                             <Text>Name: {item.user}</Text>
                             <Text>Time: {item.time}</Text>
@@ -215,13 +273,5 @@ export default function HomeScreen() {
                             <Text>Image: {item.image}</Text>
                             <Text>Private: {item.private}</Text>
                         </View>
-
                     </TouchableOpacity>
-
-                }
-                data={stories}
-            />
-
-        </View>
-    )
-}
+*/
