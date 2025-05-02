@@ -140,6 +140,8 @@ Expo 53 olisi saatavilla, mutta päädyin tällä hetkellä pitämään projekti
 
 - API kutsussa käytetään NASAn julkista avainta, jonka päivittäinen käyttörajoitus on 50 kutsua per IP.
 
+**Commit 14:** Added logic for automatically returning to homescreen after succesful login
+
 
 ## Lähteet
 

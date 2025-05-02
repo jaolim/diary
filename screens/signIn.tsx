@@ -25,7 +25,7 @@ export default function Signin() {
         <ImageBackground source={{ uri: background }} style={styles.center} resizeMode="cover">
             <View style={styles.center}>
                 <Text style={styles.user} variant="titleLarge">
-                    {user != null ? (
+                    {user ? (
                         <>
                             User: {user}
                         </>
@@ -57,7 +57,12 @@ export default function Signin() {
                     onChangeText={text => setPassword(text)}
                     disabled={isDisabled}
                 />
-                <Button style={styles.margin} mode="contained" onPress={async () => await login(username, password)}>
+                <Button style={styles.margin} mode="contained" onPress={async () => {
+                    const logged = await login(username, password);
+                    if (logged){
+                        navigation.navigate('Home')
+                    }
+                }}>
                     Login
                 </Button>
 

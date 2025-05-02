@@ -119,7 +119,7 @@ export default function NewStory({ route }: any) {
             >
                 <View style={styles.center}>
                     <Text style={styles.user}>
-                        {user != null ? (
+                        {user ? (
                             <>
                                 User: {user}
                             </>

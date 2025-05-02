@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { ImageBackground, View } from "react-native";
 import { Button, Text, TextInput } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
@@ -11,8 +10,6 @@ import { NavigatorParams } from "../resources/customTypes";
 import { useState } from "react";
 import { useSQLiteContext } from "expo-sqlite";
 
-import { User } from "../resources/customTypes";
-
 type navigatorProp = StackNavigationProp<NavigatorParams>;
 
 export default function Signup() {
@@ -24,36 +21,21 @@ export default function Signup() {
     const [password, setPassword] = useState('');
     const { background } = useBackground();
 
-    const getUsers = async () => {
-        try {
-            const list = await db.getAllAsync('SELECT name from users') as User[];
-            setUsers(list.map(({ name }) => name));
-        } catch (error) {
-            console.error('Cannot read user database', error)
-        }
-    }
-
     const addUser = async (name: string, password: string) => {
         if (users.includes(name)) {
             alert('Choose a unique username')
         } else {
             register(name, password)
             login(name, password)
+            navigation.navigate('Home')
         }
-        getUsers();
     }
-
-
-    useEffect(() => {
-        getUsers();
-    }, [])
-
 
     return (
         <ImageBackground source={{ uri: background }} style={styles.center} resizeMode="cover">
             <View style={styles.center}>
                 <Text style={styles.user}>
-                    {user != null ? (
+                    {user ? (
                         <>
                             User: {user}
                         </>
@@ -92,16 +74,20 @@ export default function Signup() {
 }
 
 /*
-                <Button style={styles.margin} mode="contained" onPress={() => addUser('Tester', 'Qwerty')}>
-                    Test Add user
-                </Button>
+import { useEffect } from "react";
 
-                            <FlatList
-                renderItem={({ item }) =>
-                    <View style={styles.borderBlue}>
-                        <Text>Name: {item}</Text>
-                    </View>
-                }
-                data={users}
-            />
+import { User } from "../resources/customTypes";
+    const getUsers = async () => {
+        try {
+            const list = await db.getAllAsync('SELECT name from users') as User[];
+            setUsers(list.map(({ name }) => name));
+        } catch (error) {
+            console.error('Cannot read user database', error)
+        }
+    }
+
+    useEffect(() => {
+        getUsers();
+    }, [])
+
 */

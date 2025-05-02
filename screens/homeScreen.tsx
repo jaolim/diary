@@ -9,7 +9,7 @@ import dayjs from "dayjs";
 
 import { initializeDatabase } from "../resources/initializeDatabase";
 
-import { NavigatorParams } from "../resources/customTypes";
+import { NavigatorParams, User } from "../resources/customTypes";
 import { Story } from "../resources/customTypes";
 import styles from "../resources/styles"
 import { useAuth } from "../resources/useAuth";
@@ -29,57 +29,13 @@ export default function HomeScreen() {
     const { active, user, login, logout } = useAuth();
     const { background, fetchBackground } = useBackground();
 
-    const exampleStory = {
-        id: '0',
-        user: user,
-        time: "123",
-        header: "Example Story",
-        body: "Body of text\nThis should be on a new line.",
-        image: "-1",
-        private: false
-    }
-
-    const testUser = {
-        userId: '0',
-        name: 'Tester',
-        password: 'Password'
-    }
-
     const getStories = async () => {
         try {
             const list = await db.getAllAsync('SELECT * from stories WHERE user = (?) OR private = false', user);
-            setStories(list as Story[]);
+            setStories(list.reverse() as Story[]);
         } catch (error) {
             console.error('Could not get stories', error);
         }
-    }
-
-    const getUsers = async () => {
-        try {
-            const list = await db.getAllAsync('SELECT * from users');
-            setUsers(list as any);
-        } catch (error) {
-            console.error('Could not get users', error);
-        }
-    }
-
-    const saveStory = async () => {
-        try {
-            await db.runAsync('INSERT INTO stories (id, user, time, header, body, image, private) VALUES (?, ?, ?, ?, ?, ?, ?)', exampleStory.id, exampleStory.user, exampleStory.time, exampleStory.header, exampleStory.body, exampleStory.image, exampleStory.private)
-        } catch (error) {
-            console.error('Could not add story', error);
-        }
-        getStories();
-    }
-
-    const addTestUser = async () => {
-
-        try {
-            await db.runAsync('INSERT INTO users (name, password) VALUES ( ?, ?)', testUser.name, testUser.password)
-        } catch (error) {
-            console.error('Could not add user', error)
-        }
-        getUsers();
     }
 
     const resetDB = async () => {
@@ -116,7 +72,7 @@ export default function HomeScreen() {
             console.error(error)
         }
         deletePictures();
-        getUsers();
+        //getUsers();
         getStories();
         active();
     }
@@ -127,8 +83,8 @@ export default function HomeScreen() {
 
     useEffect(() => {
         //resetDB();
+        //getUsers();
         active();
-        getUsers();
         getStories();
         if (!background) {
             fetchBackground();
@@ -139,16 +95,11 @@ export default function HomeScreen() {
         getStories();
     }, [user])
 
-    const handleSubmit = () => {
-        login('Tester', 'Password')
-        getStories();
-    }
-
     return (
         <ImageBackground source={{ uri: background }} style={styles.center} resizeMode="cover">
             <View style={styles.center}>
                 <Text style={styles.user}>
-                    {user != null ? (
+                    {user ? (
                         <>
                             User: {user}
                         </>
@@ -212,66 +163,13 @@ export default function HomeScreen() {
 
 
 /*
-            <FlatList
-                keyExtractor={item => item.name}
-                renderItem={({ item }) =>
-                    <View style={styles.borderBlue}>
-                        <Text>Name: {item.name}</Text>
-                        <Text>Password: {item.password}</Text>
-                    </View>
-                }
-                data={users}
-            />
+    const getUsers = async () => {
+        try {
+            const list = (await db.getAllAsync('SELECT * from users'));
+            setUsers(list as any);
+        } catch (error) {
+            console.error('Could not get users', error);
+        }
+    }
 
-                <Button style={styles.margin} mode="contained" onPress={saveStory}>
-                    Test Add
-                </Button>
-
-
-            <View style={styles.row}>
-                <Button style={styles.margin} mode="contained" onPress={addTestUser}>
-                    Add test user
-                </Button>
-                <Button style={styles.margin} mode="contained" onPress={handleSubmit}>
-                    Test login
-                </Button>
-                                <Button style={styles.margin} mode="contained" onPress={deletePictures}>
-                    Delete Pictures
-                </Button>
-            </View>
-
-                                <TouchableOpacity
-                        onPress={() => {
-                            navigation.navigate('ViewStory', { id: item.id });
-                        }}
-                    >
-                        <View style={styles.borderBlue}>
-                            {item.image != '-1' ? (
-                                <>
-                                    <Image style={{ height: 80, width: 80 }} source={{ uri: item.image }} />
-                                </>
-                            ) : (
-                                null
-                            )}
-                            <Card>
-                                <Card.Title title={`${dayjs(item.time).format('DD/MM/YYYY')} - ${item.user}`} />
-                                <Card.Content>
-                                    <Text variant="titleLarge">{item.header}</Text>
-                                    <Text variant="bodyMedium">{item.body}</Text>
-                                </Card.Content>
-                                {item.image != '-1' ? (
-                                    <Card.Cover source={{ uri: item.image }} />
-                                ) : (
-                                    null
-                                )}
-                            </Card>
-                            <Text>ID: {item.id}</Text>
-                            <Text>Name: {item.user}</Text>
-                            <Text>Time: {item.time}</Text>
-                            <Text>Header: {item.header}</Text>
-                            <Text>Body: {item.body}</Text>
-                            <Text>Image: {item.image}</Text>
-                            <Text>Private: {item.private}</Text>
-                        </View>
-                    </TouchableOpacity>
 */

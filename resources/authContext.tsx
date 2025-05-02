@@ -12,42 +12,52 @@ export const AuthProvider = ({ children }: any) => {
   const [user, setUser] = useState<any>();
 
   const login = async (name: string, password: string) => {
-    try {
-      const auth = await db.getFirstAsync(`SELECT * FROM users WHERE name = (?)`, name) as User
-      if (auth) {
-        if (auth.password == password) {
-          setUser(auth.name)
-          try {
-            await db.runAsync('DELETE from activeuser')
+    if (name == user) {
+      alert('You are already logged in')
+      return true;
+    } else {
+      try {
+        const auth = await db.getFirstAsync(`SELECT * FROM users WHERE name = (?)`, name) as User
+        if (auth) {
+          if (auth.password == password) {
+            setUser(auth.name)
             try {
-              await db.runAsync('INSERT INTO activeuser (name) VALUES (?)', auth.name)
-            } catch (error){
-              console.error('Could not set active user.', error)
+              await db.runAsync('DELETE from activeuser')
+              try {
+                await db.runAsync('INSERT INTO activeuser (name) VALUES (?)', auth.name)
+              } catch (error) {
+                console.error('Could not set active user.', error)
+              }
+            } catch (error) {
+              console.error('Could not delete active user.', error)
             }
-          } catch (error) {
-            console.error('Could not delete active user.', error)
+          } else {
+            alert('Wrong username or password.')
+            return false;
           }
         } else {
           alert('Wrong username or password.')
+          return false;
         }
-      } else {
-        alert('Wrong username or password.')
+      } catch (error) {
+        console.log('Unable to login', error);
       }
-    } catch (error) {
-      console.log('Unable to login', error);
     }
+    return true;
   }
 
   const register = async (name: string, password: string) => {
     try {
       await db.runAsync('INSERT into users (name, password) VALUES (?, ?)', name, password)
       login(name, password)
+      return true;
     } catch (error) {
       console.error('Could not create user', error)
     }
+    return false;
   }
 
-  const logout = async() => {
+  const logout = async () => {
     try {
       await db.runAsync('DELETE from activeuser')
       setUser(null)
