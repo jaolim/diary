@@ -140,15 +140,17 @@ export default function HomeScreen() {
                             <View>
                                 <Card style={{ minWidth: "80%", margin: 5 }}>
                                     <Card.Title title={`${dayjs(item.time).format('DD/MM/YYYY - HH:mm')} by ${item.user}`} />
-                                    <Card.Content>
-                                        <Text variant="titleLarge">{item.header}</Text>
-                                        <Text variant="bodyMedium">{item.body}</Text>
-                                    </Card.Content>
-                                    {item.image != '-1' ? (
-                                        <Card.Cover source={{ uri: item.image }} />
-                                    ) : (
-                                        null
-                                    )}
+                                    <View style={styles.row}>
+                                        <Card.Content>
+                                            <Text variant="titleLarge">{item.header}</Text>
+                                            <Text variant="bodyMedium">{item.body}</Text>
+                                        </Card.Content>
+                                        {item.image != '-1' ? (
+                                            <Card.Cover source={{ uri: item.image }} style={{minWidth:"30%"}} resizeMode='contain'/>
+                                        ) : (
+                                            null
+                                        )}
+                                    </View>
                                 </Card>
                             </View>
                         </TouchableOpacity>

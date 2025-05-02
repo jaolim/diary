@@ -48,7 +48,6 @@ export default function NewStory({ route }: any) {
     }
 
     const saveStory = async () => {
-
         try {
             await db.runAsync('INSERT INTO stories (id, user, time, header, body, image, private) VALUES (?, ?, ?, ?, ?, ?, ?)', time + user, user, time, header, body, imageKey, isPrivate)
         } catch (error) {
@@ -81,10 +80,6 @@ export default function NewStory({ route }: any) {
     useEffect(() => {
         isLogged();
     }, [])
-
-    if (!user) {
-        setIsDisabled(true);
-    }
 
     if (!permission) {
         return (

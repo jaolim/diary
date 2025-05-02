@@ -121,20 +121,24 @@ export default function ViewStory({ route }: any) {
                         null
                     )}
                 </View>
-                <Card style={{ minWidth: "100%" }}>
-                    <Card.Title title={`${dayjs(story.time).format('DD/MM/YYYY - HH:mm')} by ${story.user}`} />
-                    <View style={styles.row}>
-                        <Card.Content>
-                            <Text variant="titleLarge">{story.header}</Text>
-                            <Text variant="bodyMedium">{story.body}</Text>
-                        </Card.Content>
-                        {story.image != '-1' ? (
-                            <Card.Cover source={{ uri: story.image }} style={{minWidth:"40%"}} resizeMode="contain"/>
-                        ) : (
-                            null
-                        )}
-                    </View>
-                </Card>
+                {story.id != '-1' ? (
+                    <Card style={{ minWidth: "100%" }}>
+                        <Card.Title title={`${dayjs(story.time).format('DD/MM/YYYY - HH:mm')} by ${story.user}`} />
+                        <View style={styles.row}>
+                            <Card.Content>
+                                <Text variant="titleLarge">{story.header}</Text>
+                                <Text variant="bodyMedium">{story.body}</Text>
+                            </Card.Content>
+                            {story.image != '-1' ? (
+                                <Card.Cover source={{ uri: story.image }} style={{ minWidth: "40%" }} resizeMode="contain" />
+                            ) : (
+                                null
+                            )}
+                        </View>
+                    </Card>
+                ) : (
+                    null
+                )}
                 <FlatList
                     keyExtractor={item => item.id}
                     renderItem={({ item }) =>
