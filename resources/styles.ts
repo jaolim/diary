@@ -24,6 +24,11 @@ export default StyleSheet.create({
         height: 200,
         width: 300
     },
+    inputComment: {
+        marginTop: 10,
+        marginBottom: 10,
+        width: 200
+    },
     inputTitle: {
         marginTop: 10,
         marginBottom: 10,

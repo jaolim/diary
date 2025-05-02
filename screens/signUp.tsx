@@ -34,15 +34,11 @@ export default function Signup() {
     return (
         <ImageBackground source={{ uri: background }} style={styles.center} resizeMode="cover">
             <View style={styles.center}>
-                <Text style={styles.user}>
-                    {user ? (
-                        <>
-                            User: {user}
-                        </>
-                    ) : (
-                        'User: Guest'
-                    )}
-                </Text>
+                {user ? (
+                    <Text style={styles.user} variant="titleLarge">User: {user}</Text>
+                ) : (
+                    <Text style={styles.user} variant="titleLarge">User: Guest</Text>
+                )}
                 <View style={styles.row}>
                     <Button style={styles.margin} mode="contained" onPress={logout}>
                         Logout
@@ -72,22 +68,3 @@ export default function Signup() {
     )
 
 }
-
-/*
-import { useEffect } from "react";
-
-import { User } from "../resources/customTypes";
-    const getUsers = async () => {
-        try {
-            const list = await db.getAllAsync('SELECT name from users') as User[];
-            setUsers(list.map(({ name }) => name));
-        } catch (error) {
-            console.error('Cannot read user database', error)
-        }
-    }
-
-    useEffect(() => {
-        getUsers();
-    }, [])
-
-*/

@@ -24,9 +24,8 @@ export default function HomeScreen() {
     const navigation = useNavigation<navigatorProp>();
     const db = useSQLiteContext();
     const [stories, setStories] = useState<Story[]>()
-    const [users, setUsers] = useState()
     const directory = `${FileSystem.documentDirectory}diary`
-    const { active, user, login, logout } = useAuth();
+    const { active, user, logout } = useAuth();
     const { background, fetchBackground } = useBackground();
 
     const getStories = async () => {
@@ -36,6 +35,7 @@ export default function HomeScreen() {
         } catch (error) {
             console.error('Could not get stories', error);
         }
+
     }
 
     const resetDB = async () => {
@@ -98,15 +98,11 @@ export default function HomeScreen() {
     return (
         <ImageBackground source={{ uri: background }} style={styles.center} resizeMode="cover">
             <View style={styles.center}>
-                <Text style={styles.user}>
-                    {user ? (
-                        <>
-                            User: {user}
-                        </>
-                    ) : (
-                        'User: Guest'
-                    )}
-                </Text>
+                {user ? (
+                    <Text style={styles.user} variant="titleLarge">User: {user}</Text>
+                ) : (
+                    <Text style={styles.user} variant="titleLarge">User: Guest</Text>
+                )}
                 <View style={styles.row}>
                     <Button style={styles.margin} mode="contained" onPress={() => navigation.navigate('Signin')}>
                         Login
@@ -114,7 +110,12 @@ export default function HomeScreen() {
                     <Button style={styles.margin} mode="contained" onPress={() => navigation.navigate('Signup')}>
                         Sign up
                     </Button>
-                    <Button style={styles.margin} mode="contained" onPress={() => logout()}>
+                    <Button style={styles.margin} mode="contained" onPress={async () => {
+                        const loggedOut = await logout();
+                        if (loggedOut) {
+                            getStories();
+                        }
+                    }}>
                         Logout
                     </Button>
                 </View>
@@ -160,16 +161,3 @@ export default function HomeScreen() {
         </ImageBackground>
     )
 }
-
-
-/*
-    const getUsers = async () => {
-        try {
-            const list = (await db.getAllAsync('SELECT * from users'));
-            setUsers(list as any);
-        } catch (error) {
-            console.error('Could not get users', error);
-        }
-    }
-
-*/

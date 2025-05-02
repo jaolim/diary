@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { ImageBackground, View } from "react-native"
-import { Button, Card, Text } from "react-native-paper";
+import { FlatList, ImageBackground, Keyboard, View } from "react-native"
+import { Button, Card, Text, TextInput } from "react-native-paper";
 import dayjs from "dayjs";
 
 import styles from "../resources/styles"
@@ -9,7 +9,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { useSQLiteContext } from "expo-sqlite";
 
 import { useBackground } from "../resources/useBackground";
-import { Story } from "../resources/customTypes";
+import { Comment, Story } from "../resources/customTypes";
 import { NavigatorParams } from "../resources/customTypes";
 import { useAuth } from "../resources/useAuth";
 
@@ -21,6 +21,9 @@ export default function ViewStory({ route }: any) {
     const db = useSQLiteContext();
     const thisId = route.params.id;
     const { user } = useAuth();
+    const [comments, setComments] = useState<Comment[]>([])
+    const [comment, setComment] = useState('')
+    const [isDisabled, setIsDisabled] = useState(false)
     const [story, setStory] = useState<Story>(
         {
             id: '-1',
@@ -42,50 +45,140 @@ export default function ViewStory({ route }: any) {
         }
     }
 
+    const getComments = async () => {
+        try {
+            const list = await db.getAllAsync('SELECT * from comments WHERE storyId = (?)', story.id);
+            setComments(list.reverse() as Comment[]);
+        } catch (error) {
+            console.error('Could not get stories', error);
+        }
+    }
+
     const deleteStory = async () => {
         try {
             db.runAsync('DELETE from stories WHERE id = (?)', thisId)
+            try {
+                db.runAsync('DELETE from comments WHERE storyId = (?)', thisId)
+            } catch (error) {
+                console.error('Could not delete comments')
+            }
         } catch (error) {
             console.error('Could not delete story')
         }
     }
 
+    const addComment = async () => {
+        const time = dayjs().toISOString();
+        try {
+            await db.runAsync('INSERT INTO comments (id, user, storyId, time, comment) VALUES (?, ?, ?, ?, ?)', story.id + time + user, user, story.id, time, comment)
+        } catch (error) {
+            console.error('Could not add story', error);
+        }
+        setComment('')
+        Keyboard.dismiss();
+        getComments();
+    }
+
+    const deleteComment = async (id: string) => {
+        try {
+            db.runAsync('DELETE from comments WHERE id = (?)', id)
+        } catch (error) {
+            console.error('Could not delete comment')
+        }
+        getComments();
+    }
+
     useEffect(() => {
         getStory();
+        getComments();
+        if (!user) {
+            setIsDisabled(true)
+        }
     }, [])
+
+    useEffect(() => {
+        getComments();
+    }, [story])
 
 
     return (
         <ImageBackground source={{ uri: background }} style={styles.center} resizeMode="cover">
             <View style={styles.center}>
-
-                <Button style={styles.margin} mode="contained" onPress={() => navigation.navigate('Home')}>
-                    Home
-                </Button>
-
-                <Card style={{ minWidth: "80%" }}>
-                    <Card.Title title={`${dayjs(story.time).format('DD/MM/YYYY - HH:mm')} by ${story.user}`} />
-                    <Card.Content>
-                        <Text variant="titleLarge">{story.header}</Text>
-                        <Text variant="bodyMedium">{story.body}</Text>
-                    </Card.Content>
-                    {story.image != '-1' ? (
-                        <Card.Cover source={{ uri: story.image }} />
+                <View style={styles.row}>
+                    <Button style={styles.margin} mode="contained" onPress={() => navigation.navigate('Home')}>
+                        Home
+                    </Button>
+                    {user == story.user ? (
+                        <Button style={styles.margin} mode="contained" onPress={
+                            () => {
+                                deleteStory();
+                                navigation.navigate('Home')
+                            }
+                        }>
+                            Delete Story
+                        </Button>
                     ) : (
                         null
                     )}
+                </View>
+                <Card style={{ minWidth: "100%" }}>
+                    <Card.Title title={`${dayjs(story.time).format('DD/MM/YYYY - HH:mm')} by ${story.user}`} />
+                    <View style={styles.row}>
+                        <Card.Content>
+                            <Text variant="titleLarge">{story.header}</Text>
+                            <Text variant="bodyMedium">{story.body}</Text>
+                        </Card.Content>
+                        {story.image != '-1' ? (
+                            <Card.Cover source={{ uri: story.image }} style={{minWidth:"40%"}} resizeMode="contain"/>
+                        ) : (
+                            null
+                        )}
+                    </View>
                 </Card>
-                {user == story.user ? (
-                    <Button style={styles.margin} mode="contained" onPress={
-                        () => {
-                            deleteStory();
-                            navigation.navigate('Home')
-                        }
-                    }>
-                        Delete Story
+                <FlatList
+                    keyExtractor={item => item.id}
+                    renderItem={({ item }) =>
+                        <View style={styles.row}>
+                            <Card style={{ minWidth: "80%", margin: 5 }}>
+                                <Card.Title title={`${dayjs(item.time).format('DD/MM/YYYY - HH:mm')} by ${item.user}`} />
+                                <View style={styles.row}>
+                                    <Card.Content>
+                                        <Text variant="bodyMedium">{item.comment}</Text>
+                                    </Card.Content>
+                                    <Card.Actions>
+                                        {user == item.user ? (
+                                            <Button style={styles.margin} mode="contained" onPress={() => deleteComment(item.id)}>
+                                                Delete
+                                            </Button>
+                                        ) : (
+                                            null
+                                        )}
+                                    </Card.Actions>
+                                </View>
+                            </Card>
+                        </View>
+
+
+                    }
+                    data={comments}
+                />
+            </View>
+            <View style={styles.row}>
+                <TextInput
+                    style={styles.inputComment}
+                    label="Comment"
+                    disabled={isDisabled}
+                    value={comment}
+                    onChangeText={text => setComment(text)}
+                />
+                {user ? (
+                    <Button style={styles.margin} mode="contained" onPress={addComment}>
+                        Comment
                     </Button>
                 ) : (
-                    null
+                    <Button style={styles.margin} mode="contained" onPress={() => navigation.navigate('Signin')}>
+                        Login
+                    </Button>
                 )}
             </View>
         </ImageBackground>

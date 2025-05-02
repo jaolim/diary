@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { Image, Modal, Text, View } from "react-native";
-import { Button, TextInput, ToggleButton } from "react-native-paper";
+import { Image, Modal, View } from "react-native";
+import { Button, Text, TextInput, ToggleButton } from "react-native-paper";
 import { useSQLiteContext } from "expo-sqlite";
 import { StackNavigationProp } from '@react-navigation/stack';
 import { CameraView, useCameraPermissions } from "expo-camera";
@@ -83,9 +83,7 @@ export default function NewStory({ route }: any) {
     }, [])
 
     if (!user) {
-        <View style={styles.center}>
-            <Text></Text>
-        </View>
+        setIsDisabled(true);
     }
 
     if (!permission) {
@@ -118,14 +116,11 @@ export default function NewStory({ route }: any) {
                 visible={modalVisible}
             >
                 <View style={styles.center}>
-                    <Text style={styles.user}>
-                        {user ? (
-                            <>
-                                User: {user}
-                            </>
-                        ) : (
-                            'User: Guest'
-                        )}</Text>
+                    {user ? (
+                        <Text style={styles.user} variant="titleLarge">User: {user}</Text>
+                    ) : (
+                        <Text style={styles.user} variant="titleLarge">User: Guest</Text>
+                    )}
                     <View style={styles.row}>
                         <TextInput
                             style={styles.inputTitle}
@@ -150,6 +145,7 @@ export default function NewStory({ route }: any) {
                     </View>
                     <TextInput
                         style={styles.inputBody}
+                        multiline={true}
                         label="Story"
                         disabled={isDisabled}
                         value={body}
@@ -157,7 +153,7 @@ export default function NewStory({ route }: any) {
                     />
                     {user ? (
                         <Image style={{ flex: 1, minWidth: "100%" }} source={{ uri: `data:image/jpg;base64,${imageBase64}` }} />
-                    ):(
+                    ) : (
                         <Text>Please log in before submitting stories</Text>
                     )}
                     <View style={styles.row}>

@@ -142,6 +142,8 @@ Expo 53 olisi saatavilla, mutta päädyin tällä hetkellä pitämään projekti
 
 **Commit 14:** Added logic for automatically returning to homescreen after succesful login
 
+**Commit 15:** Added comments for stories
+
 
 ## Lähteet
 

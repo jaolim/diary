@@ -24,15 +24,11 @@ export default function Signin() {
     return (
         <ImageBackground source={{ uri: background }} style={styles.center} resizeMode="cover">
             <View style={styles.center}>
-                <Text style={styles.user} variant="titleLarge">
-                    {user ? (
-                        <>
-                            User: {user}
-                        </>
-                    ) : (
-                        'User: Guest'
-                    )}
-                </Text>
+                {user ? (
+                    <Text style={styles.user} variant="titleLarge">'User:' {user}</Text>
+                ) : (
+                    <Text style={styles.user} variant="titleLarge">User: Guest'</Text>
+                )}
 
                 <View style={styles.row}>
                     <Button style={styles.margin} mode="contained" onPress={() => navigation.navigate('Home')}>
@@ -59,7 +55,7 @@ export default function Signin() {
                 />
                 <Button style={styles.margin} mode="contained" onPress={async () => {
                     const logged = await login(username, password);
-                    if (logged){
+                    if (logged) {
                         navigation.navigate('Home')
                     }
                 }}>

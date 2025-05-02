@@ -38,4 +38,19 @@ export const initializeDatabase = async (db: SQLiteDatabase) => {
   } catch (error) {
     console.error('Could not create table activeuser', error);
   }
+  try {
+    await db.execAsync(`
+      CREATE TABLE IF NOT EXISTS comments (
+        id TEXT,
+        user TEXT,
+        storyId TEXT,
+        time TEXT,
+        comment TEXT
+      );
+      `
+    );
+  } catch (error) {
+    console.error('Could not create table comments', error);
+  }
+
 }

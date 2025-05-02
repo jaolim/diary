@@ -20,11 +20,18 @@ export type Story = {
     private: boolean
 }
 
+export type Comment = {
+    id: string,
+    user: string,
+    storyId: string,
+    time: string,
+    comment: string
+}
+
 export type User = {
     name: string,
     password: string
 }
-
 
 export type ActiveUser = {
     name: string
