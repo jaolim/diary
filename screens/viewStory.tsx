@@ -18,13 +18,13 @@ type navigatorProp = StackNavigationProp<NavigatorParams>;
 
 export default function ViewStory({ route }: any) {
     const navigation = useNavigation<navigatorProp>();
-    const { background } = useBackground();
     const db = useSQLiteContext();
-    const thisId = route.params.id;
+    const { background } = useBackground();
     const { user } = useAuth();
-    const [comments, setComments] = useState<Comment[]>([])
-    const [comment, setComment] = useState('')
-    const [isDisabled, setIsDisabled] = useState(false)
+    const thisId = route.params.id;
+    const [comments, setComments] = useState<Comment[]>([]);
+    const [comment, setComment] = useState('');
+    const [isDisabled, setIsDisabled] = useState(false);
     const [story, setStory] = useState<Story>(
         {
             id: '-1',
@@ -39,10 +39,10 @@ export default function ViewStory({ route }: any) {
 
     const getStory = async () => {
         try {
-            const getStory = await db.getAllAsync('SELECT * from stories WHERE id = (?)', thisId)
-            setStory(getStory[0] as Story)
+            const getStory = await db.getAllAsync('SELECT * from stories WHERE id = (?)', thisId);
+            setStory(getStory[0] as Story);
         } catch (error) {
-            console.error('Error accessing database', error)
+            console.error('Error accessing database', error);
         }
     }
 
@@ -59,35 +59,35 @@ export default function ViewStory({ route }: any) {
         try {
             db.runAsync('DELETE from stories WHERE id = (?)', thisId)
             if (story.image != '-1') {
-                FileSystem.deleteAsync(story.image)
+                FileSystem.deleteAsync(story.image);
             }
             try {
-                db.runAsync('DELETE from comments WHERE storyId = (?)', thisId)
+                db.runAsync('DELETE from comments WHERE storyId = (?)', thisId);
             } catch (error) {
-                console.error('Could not delete comments')
+                console.error('Could not delete comments');
             }
         } catch (error) {
-            console.error('Could not delete story')
+            console.error('Could not delete story');
         }
     }
 
     const addComment = async () => {
         const time = dayjs().toISOString();
         try {
-            await db.runAsync('INSERT INTO comments (id, user, storyId, time, comment) VALUES (?, ?, ?, ?, ?)', story.id + time + user, user, story.id, time, comment)
+            await db.runAsync('INSERT INTO comments (id, user, storyId, time, comment) VALUES (?, ?, ?, ?, ?)', story.id + time + user, user, story.id, time, comment);
         } catch (error) {
             console.error('Could not add story', error);
         }
-        setComment('')
+        setComment('');
         Keyboard.dismiss();
         getComments();
     }
 
     const deleteComment = async (id: string) => {
         try {
-            db.runAsync('DELETE from comments WHERE id = (?)', id)
+            db.runAsync('DELETE from comments WHERE id = (?)', id);
         } catch (error) {
-            console.error('Could not delete comment')
+            console.error('Could not delete comment');
         }
         getComments();
     }
@@ -116,7 +116,7 @@ export default function ViewStory({ route }: any) {
                         <Button style={styles.margin} mode="contained" onPress={
                             () => {
                                 deleteStory();
-                                navigation.navigate('Home')
+                                navigation.navigate('Home');
                             }
                         }>
                             Delete Story
@@ -126,7 +126,7 @@ export default function ViewStory({ route }: any) {
                     )}
                 </View>
                 {story.id != '-1' ? (
-                    <Card style={{ minWidth: "100%" }}>
+                    <Card style={{ minWidth: "95%" }}>
                         <Card.Title title={`${dayjs(story.time).format('DD/MM/YYYY - HH:mm')} by ${story.user}`} />
                         <View style={styles.row}>
                             <Card.Content>
@@ -185,7 +185,7 @@ export default function ViewStory({ route }: any) {
                     </Button>
                 ) : (
                     <Button style={styles.margin} mode="contained" onPress={() => navigation.navigate('Signin')}>
-                        Login
+                        Log in to comment
                     </Button>
                 )}
             </View>

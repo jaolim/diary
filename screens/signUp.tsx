@@ -23,11 +23,11 @@ export default function Signup() {
 
     const addUser = async (name: string, password: string) => {
         if (users.includes(name)) {
-            alert('Choose a unique username')
+            alert('Choose a unique username');
         } else {
-            register(name, password)
-            login(name, password)
-            navigation.navigate('Home')
+            register(name, password);
+            login(name, password);
+            navigation.navigate('Home');
         }
     }
 

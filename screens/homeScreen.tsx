@@ -23,7 +23,7 @@ type navigatorProp = StackNavigationProp<NavigatorParams>;
 export default function HomeScreen() {
     const navigation = useNavigation<navigatorProp>();
     const db = useSQLiteContext();
-    const [stories, setStories] = useState<Story[]>()
+    const [stories, setStories] = useState<Story[]>();
     const directory = `${FileSystem.documentDirectory}diary`
     const { active, user, logout } = useAuth();
     const { background, fetchBackground } = useBackground();
@@ -40,18 +40,18 @@ export default function HomeScreen() {
 
     const resetDB = async () => {
         try {
-            await db.runAsync('DROP table stories')
+            await db.runAsync('DROP table stories');
         } catch (error) {
             console.error(error);
         }
         try {
-            await db.runAsync('DROP table users')
+            await db.runAsync('DROP table users');
         } catch (error) {
             console.error(error);
         }
         try {
             logout();
-            await db.runAsync('DROP table activeuser')
+            await db.runAsync('DROP table activeuser');
         } catch (error) {
             console.error(error);
         }
@@ -59,19 +59,19 @@ export default function HomeScreen() {
 
         /*
         try {
-            await db.runAsync('DELETE from stories')
+            await db.runAsync('DELETE from stories');
         } catch (error) {
             console.error(error);
         }
         try {
-            await db.runAsync('DELETE from users')
+            await db.runAsync('DELETE from users');
         } catch (error) {
             console.error(error);
         }
         try {
-            await db.runAsync('DELETE from activeuser')
+            await db.runAsync('DELETE from activeuser');
         } catch (error) {
-            console.error(error)
+            console.error(error);
         }
         */
 
@@ -81,7 +81,7 @@ export default function HomeScreen() {
     }
 
     const deletePictures = async () => {
-        FileSystem.deleteAsync(directory)
+        FileSystem.deleteAsync(directory);
     }
 
     useEffect(() => {
@@ -130,7 +130,7 @@ export default function HomeScreen() {
                     </Button>
                 </View>
 
-                <Text variant="titleLarge" style={{ backgroundColor: "white", margin: 5 }}>Stories timeline</Text>
+                <Text variant="titleLarge" style={styles.pageTitle}>Stories timeline</Text>
                 <FlatList
                     keyExtractor={item => item.id}
                     renderItem={({ item }) =>
@@ -163,20 +163,3 @@ export default function HomeScreen() {
         </ImageBackground>
     )
 }
-
-    /*    
-        const [fileList, setFileList] = useState<string[]>([])
-        const testFiles = async () => {
-            const files = await FileSystem.readDirectoryAsync(directory)
-            setFileList(files)
-        }
-    */
-
-
-/*
-                <Button style={styles.margin} mode="contained" onPress={testFiles}>
-                    Fetch Files
-                </Button>
-                <Text style={{ backgroundColor: "white" }}>{JSON.stringify(directory)}</Text>
-                <Text style={{ backgroundColor: "white" }}>{JSON.stringify(fileList)}</Text>
-*/

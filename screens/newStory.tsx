@@ -35,39 +35,40 @@ export default function NewStory({ route }: any) {
 
     const onButtonToggle = () => {
         setStatus(status === 'unchecked' ? 'checked' : 'unchecked');
-        setIsPrivate(isPrivate === false ? true : false)
+        setIsPrivate(isPrivate === false ? true : false);
     }
 
     const snap = async () => {
         if (camera) {
             const photo = await camera.current.takePictureAsync({ base64: true });
+            setImageKey('-1');
             setImageName(photo.uri);
             setImageBase64(photo.base64);
-            setImageId(`Photo_User_${time}`)
+            setImageId(`Photo_User_${time}`);
         }
     }
 
     const saveStory = async () => {
         try {
-            await db.runAsync('INSERT INTO stories (id, user, time, header, body, image, private) VALUES (?, ?, ?, ?, ?, ?, ?)', time + user, user, time, header, body, imageKey, isPrivate)
+            await db.runAsync('INSERT INTO stories (id, user, time, header, body, image, private) VALUES (?, ?, ?, ?, ?, ?, ?)', time + user, user, time, header, body, imageKey, isPrivate);
         } catch (error) {
             console.error('Could not add story', error);
         }
 
-        setIsDisabled(true)
-        navigation.navigate('Home')
+        setIsDisabled(true);
+        navigation.navigate('Home');
     }
 
     const saveImage = async () => {
         if (imageKey != '-1') {
-            FileSystem.deleteAsync(directory)
+            FileSystem.deleteAsync(directory);
         }
         const path = `${directory}${imageId}.jpg`
         try {
-            await FileSystem.copyAsync({ from: imageName, to: path })
-            setImageKey(path)
+            await FileSystem.copyAsync({ from: imageName, to: path });
+            setImageKey(path);
         } catch (error) {
-            console.error('Could not save image', error)
+            console.error('Could not save image', error);
         }
     }
 
@@ -173,22 +174,22 @@ export default function NewStory({ route }: any) {
                         )}
                         {user ? (
                             <Button mode="contained" onPress={() => {
-                                setModalVisible(false)
+                                setModalVisible(false);
                             }}>
                                 Take Picture
                             </Button>
                         ) : (
                             <Button mode="contained" onPress={() => {
-                                navigation.navigate('Signin')
+                                navigation.navigate('Signin');
                             }}>
                                 Login
                             </Button>
                         )}
                         <Button mode="contained" onPress={() => {
                             if (imageKey != '-1') {
-                                FileSystem.deleteAsync(imageKey)
+                                FileSystem.deleteAsync(imageKey);
                             }
-                            navigation.navigate('Home')
+                            navigation.navigate('Home');
                         }}>
                             Exit
                         </Button>
@@ -196,7 +197,8 @@ export default function NewStory({ route }: any) {
                 </View>
             </Modal>
 
-            <CameraView style={{ flex: 1, minWidth: "100%" }} ref={camera} />
+            <CameraView style={{ flex: 1, height: 1, width: 230
+             }} ref={camera} />
             <View style={{ flex: 1 }}>
                 {imageName && imageBase64 ? (
                     <>

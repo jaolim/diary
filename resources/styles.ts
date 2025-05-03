@@ -37,6 +37,12 @@ export default StyleSheet.create({
     margin: {
         margin: 5
     },
+    pageTitle: {
+        borderRadius: 15,
+        backgroundColor: "white",
+        margin: 5,
+        padding: 5
+    },
     row: {
         flexDirection: "row",
         justifyContent: "space-between",
@@ -57,6 +63,7 @@ export default StyleSheet.create({
         padding: 5
     },
     user: {
+        borderRadius: 15,
         color: "blue",
         backgroundColor: "white",
         padding: 5
