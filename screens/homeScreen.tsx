@@ -9,7 +9,7 @@ import dayjs from "dayjs";
 
 import { initializeDatabase } from "../resources/initializeDatabase";
 
-import { NavigatorParams, User } from "../resources/customTypes";
+import { NavigatorParams } from "../resources/customTypes";
 import { Story } from "../resources/customTypes";
 import styles from "../resources/styles"
 import { useAuth } from "../resources/useAuth";
@@ -50,12 +50,14 @@ export default function HomeScreen() {
             console.error(error);
         }
         try {
+            logout();
             await db.runAsync('DROP table activeuser')
         } catch (error) {
             console.error(error);
         }
         initializeDatabase(db);
 
+        /*
         try {
             await db.runAsync('DELETE from stories')
         } catch (error) {
@@ -71,8 +73,9 @@ export default function HomeScreen() {
         } catch (error) {
             console.error(error)
         }
+        */
+
         deletePictures();
-        //getUsers();
         getStories();
         active();
     }
@@ -83,7 +86,6 @@ export default function HomeScreen() {
 
     useEffect(() => {
         //resetDB();
-        //getUsers();
         active();
         getStories();
         if (!background) {
@@ -123,7 +125,7 @@ export default function HomeScreen() {
                     <Button style={styles.margin} mode="contained" onPress={() => navigation.navigate('NewStory')} >
                         New Story
                     </Button>
-                    <Button style={styles.margin} mode="contained" onPress={resetDB}>
+                    <Button style={styles.margin} mode="contained" onPress={resetDB} buttonColor="red">
                         Reset DB
                     </Button>
                 </View>
@@ -146,7 +148,7 @@ export default function HomeScreen() {
                                             <Text variant="bodyMedium">{item.body}</Text>
                                         </Card.Content>
                                         {item.image != '-1' ? (
-                                            <Card.Cover source={{ uri: item.image }} style={{minWidth:"30%"}} resizeMode='contain'/>
+                                            <Card.Cover source={{ uri: item.image }} style={{ minWidth: "30%" }} resizeMode='contain' />
                                         ) : (
                                             null
                                         )}
@@ -154,12 +156,27 @@ export default function HomeScreen() {
                                 </Card>
                             </View>
                         </TouchableOpacity>
-
                     }
                     data={stories}
                 />
-
             </View>
         </ImageBackground>
     )
 }
+
+    /*    
+        const [fileList, setFileList] = useState<string[]>([])
+        const testFiles = async () => {
+            const files = await FileSystem.readDirectoryAsync(directory)
+            setFileList(files)
+        }
+    */
+
+
+/*
+                <Button style={styles.margin} mode="contained" onPress={testFiles}>
+                    Fetch Files
+                </Button>
+                <Text style={{ backgroundColor: "white" }}>{JSON.stringify(directory)}</Text>
+                <Text style={{ backgroundColor: "white" }}>{JSON.stringify(fileList)}</Text>
+*/

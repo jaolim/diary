@@ -7,6 +7,7 @@ import styles from "../resources/styles"
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useSQLiteContext } from "expo-sqlite";
+import * as FileSystem from 'expo-file-system';
 
 import { useBackground } from "../resources/useBackground";
 import { Comment, Story } from "../resources/customTypes";
@@ -57,6 +58,9 @@ export default function ViewStory({ route }: any) {
     const deleteStory = async () => {
         try {
             db.runAsync('DELETE from stories WHERE id = (?)', thisId)
+            if (story.image != '-1') {
+                FileSystem.deleteAsync(story.image)
+            }
             try {
                 db.runAsync('DELETE from comments WHERE storyId = (?)', thisId)
             } catch (error) {

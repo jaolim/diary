@@ -4,17 +4,15 @@ import { PaperProvider } from 'react-native-paper';
 import { SQLiteProvider } from 'expo-sqlite';
 
 import { initializeDatabase } from './resources/initializeDatabase';
+import { NavigatorParams } from './resources/customTypes'
+import { AuthProvider } from './resources/authContext';
+import { BackgroundProvider } from './resources/backgroundContext';
 
 import HomeScreen from './screens/homeScreen';
 import NewStory from './screens/newStory';
 import ViewStory from './screens/viewStory';
 import Signin from './screens/signIn';
 import Signup from './screens/signUp';
-
-
-import { NavigatorParams } from './resources/customTypes'
-import { AuthProvider } from './resources/authContext';
-import { BackgroundProvider } from './resources/backgroundContext';
 
 const Stack = createStackNavigator<NavigatorParams>();
 

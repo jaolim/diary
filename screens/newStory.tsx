@@ -147,7 +147,7 @@ export default function NewStory({ route }: any) {
                         onChangeText={text => setBody(text)}
                     />
                     {user ? (
-                        <Image style={{ flex: 1, minWidth: "100%" }} source={{ uri: `data:image/jpg;base64,${imageBase64}` }} />
+                        <Image style={{ flex: 1, minWidth: "100%" }} source={{ uri: `data:image/jpg;base64,${imageBase64}` }} resizeMode="contain"/>
                     ) : (
                         <Text>Please log in before submitting stories</Text>
                     )}
@@ -200,7 +200,7 @@ export default function NewStory({ route }: any) {
             <View style={{ flex: 1 }}>
                 {imageName && imageBase64 ? (
                     <>
-                        <Image style={{ flex: 1, minWidth: "100%" }} source={{ uri: `data:image/jpg;base64,${imageBase64}` }} />
+                        <Image style={{ flex: 1, minWidth: "100%" }} source={{ uri: `data:image/jpg;base64,${imageBase64}` }} resizeMode="contain"/>
                     </>
                 ) : (
                     <Text>Take a picture!.</Text>

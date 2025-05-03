@@ -144,6 +144,7 @@ Expo 53 olisi saatavilla, mutta päädyin tällä hetkellä pitämään projekti
 
 **Commit 15:** Added comments for stories
 
+**Commit 16:** Added deletion of assosiacted image on story deletation and a backup source for background image if the API request fails
 
 ## Lähteet
 
