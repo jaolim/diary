@@ -152,6 +152,8 @@ Expo 53 olisi saatavilla, mutta päädyin tällä hetkellä pitämään projekti
 
 **Commit 17:** Reduced Camera picture resolution to limit storage usage
 
+Katsoin tässä kohdassa myös mahdollisuutta pitää koko tarinalista muistissa ja hoitaa filteröinti ohjelmalogiikassa tietokantakyselyn sijaan, mutta ensimmäinen toteutus aiheutti bugeja renderöinnissä screenejä vaihdettaessa, joten jätin sen tekemättä.
+
 ## Lähteet
 
 Pitääkseni lähdemerkinnät mielekkäinä, olen listannut vain ne lähteet, joilla on ollut merkittävä merkitys koodini rakenteeseen.

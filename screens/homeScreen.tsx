@@ -22,10 +22,10 @@ type navigatorProp = StackNavigationProp<NavigatorParams>;
 export default function HomeScreen() {
     const navigation = useNavigation<navigatorProp>();
     const db = useSQLiteContext();
-    const [stories, setStories] = useState<Story[]>();
-    const directory = `${FileSystem.documentDirectory}diary`
     const { active, user, logout } = useAuth();
     const { background, fetchBackground } = useBackground();
+    const directory = `${FileSystem.documentDirectory}diary`
+    const [stories, setStories] = useState<Story[]>();
 
     const getStories = async () => {
         try {
@@ -35,7 +35,6 @@ export default function HomeScreen() {
             console.error('Could not get stories', error);
         }
     }
-
 
     const resetDB = async () => {
         try {
@@ -55,25 +54,6 @@ export default function HomeScreen() {
             console.error(error);
         }
         initializeDatabase(db);
-
-        /*
-        try {
-            await db.runAsync('DELETE from stories');
-        } catch (error) {
-            console.error(error);
-        }
-        try {
-            await db.runAsync('DELETE from users');
-        } catch (error) {
-            console.error(error);
-        }
-        try {
-            await db.runAsync('DELETE from activeuser');
-        } catch (error) {
-            console.error(error);
-        }
-        */
-
         deletePictures();
         getStories();
         active();
@@ -161,37 +141,3 @@ export default function HomeScreen() {
         </ImageBackground>
     )
 }
-
-/*
-
-    const [allStories, setAllStories] = useState<Story[]>();
-    const filterStories = () => {
-        const filtered = allStories.filter((entry) => {
-            if (!entry.private || entry.user == user) {
-                return entry;
-            }
-        }) as Story[]
-        setStories(filtered)
-    }
-
-    const getAllStories = async () => {
-        try {
-            const list = await db.getAllAsync('SELECT * from stories');
-            setAllStories(list.reverse() as Story[]);
-        } catch (error) {
-            console.error('Could not get stories', error);
-        }
-        filterStories();
-    }
-
-                    {true ? (
-                    null
-                ) :
-                    (
-                        <View>
-                            <Text variant="titleLarge" style={styles.pageTitle}>Stories timeline</Text>
-                            <Text style={styles.marginWhite}>{JSON.stringify(stories)}</Text>
-                            <Text style={styles.marginWhite}>{JSON.stringify(allStories)}</Text>
-                        </View>
-                    )}
-*/

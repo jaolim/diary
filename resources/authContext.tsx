@@ -48,11 +48,9 @@ export const AuthProvider = ({ children }: any) => {
     try {
       await db.runAsync('INSERT into users (name, password) VALUES (?, ?)', name, password)
       login(name, password)
-      return true;
     } catch (error) {
       console.error('Could not create user', error)
     }
-    return false;
   }
 
   const logout = async () => {

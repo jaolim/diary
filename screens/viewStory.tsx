@@ -15,8 +15,6 @@ import { useAuth } from "../resources/useAuth";
 type navigatorProp = StackNavigationProp<NavigatorParams>;
 
 export default function ViewStory({ route }: any) {
-    const [info, setInfo] = useState<Object>({})
-
     const navigation = useNavigation<navigatorProp>();
     const db = useSQLiteContext();
     const { background } = useBackground();

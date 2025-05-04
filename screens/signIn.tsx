@@ -17,7 +17,6 @@ export default function Signin() {
     const { user, logout, login } = useAuth();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const db = useSQLiteContext();
     const [isDisabled, setIsDisabled] = useState(false);
     const { background } = useBackground();
 
