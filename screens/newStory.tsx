@@ -33,6 +33,24 @@ export default function NewStory({ route }: any) {
     const [status, setStatus] = useState<'unchecked' | 'checked'>('unchecked');
     const [isPrivate, setIsPrivate] = useState(false)
 
+    const [info, setInfo] = useState<Object>()
+    const [sizes, setSizes] = useState<string[]>()
+
+    const getInfo = async () => {
+        try {
+            const getSizes = await camera.current.getAvailablePictureSizesAsync();
+            setSizes(getSizes)
+        } catch (error) {
+            console.error('Could not get file info', error)
+        }
+        try {
+            const fileInfo = await FileSystem.getInfoAsync(imageName) as Object
+            setInfo(fileInfo)
+        } catch (error) {
+            console.error('Could not get file info', error)
+        }
+    }
+
     const onButtonToggle = () => {
         setStatus(status === 'unchecked' ? 'checked' : 'unchecked');
         setIsPrivate(isPrivate === false ? true : false);
@@ -148,7 +166,7 @@ export default function NewStory({ route }: any) {
                         onChangeText={text => setBody(text)}
                     />
                     {user ? (
-                        <Image style={{ flex: 1, minWidth: "100%" }} source={{ uri: `data:image/jpg;base64,${imageBase64}` }} resizeMode="contain"/>
+                        <Image style={{ flex: 1, minWidth: "100%" }} source={{ uri: `data:image/jpg;base64,${imageBase64}` }} resizeMode="contain" />
                     ) : (
                         <Text>Please log in before submitting stories</Text>
                     )}
@@ -197,12 +215,15 @@ export default function NewStory({ route }: any) {
                 </View>
             </Modal>
 
-            <CameraView style={{ flex: 1, height: 1, width: 230
-             }} ref={camera} />
+            <CameraView style={{
+                flex: 1, height: 1, width: 230
+            }} ref={camera}
+                pictureSize='720x480'
+            />
             <View style={{ flex: 1 }}>
                 {imageName && imageBase64 ? (
                     <>
-                        <Image style={{ flex: 1, minWidth: "100%" }} source={{ uri: `data:image/jpg;base64,${imageBase64}` }} resizeMode="contain"/>
+                        <Image style={{ flex: 1, minWidth: "100%" }} source={{ uri: `data:image/jpg;base64,${imageBase64}` }} resizeMode="contain" />
                     </>
                 ) : (
                     <Text>Take a picture!.</Text>

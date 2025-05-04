@@ -37,6 +37,10 @@ export default StyleSheet.create({
     margin: {
         margin: 5
     },
+    marginWhite: {
+        margin: 5,
+        backgroundColor: "white"
+    },
     pageTitle: {
         borderRadius: 15,
         backgroundColor: "white",

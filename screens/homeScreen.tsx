@@ -1,4 +1,4 @@
-import { FlatList, Image, ImageBackground, TouchableOpacity, View } from "react-native";
+import { FlatList, ImageBackground, TouchableOpacity, View } from "react-native";
 import { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -9,8 +9,7 @@ import dayjs from "dayjs";
 
 import { initializeDatabase } from "../resources/initializeDatabase";
 
-import { NavigatorParams } from "../resources/customTypes";
-import { Story } from "../resources/customTypes";
+import { NavigatorParams, Story } from "../resources/customTypes";
 import styles from "../resources/styles"
 import { useAuth } from "../resources/useAuth";
 import { useBackground } from "../resources/useBackground";
@@ -35,8 +34,8 @@ export default function HomeScreen() {
         } catch (error) {
             console.error('Could not get stories', error);
         }
-
     }
+
 
     const resetDB = async () => {
         try {
@@ -130,7 +129,6 @@ export default function HomeScreen() {
                     </Button>
                 </View>
 
-                <Text variant="titleLarge" style={styles.pageTitle}>Stories timeline</Text>
                 <FlatList
                     keyExtractor={item => item.id}
                     renderItem={({ item }) =>
@@ -163,3 +161,37 @@ export default function HomeScreen() {
         </ImageBackground>
     )
 }
+
+/*
+
+    const [allStories, setAllStories] = useState<Story[]>();
+    const filterStories = () => {
+        const filtered = allStories.filter((entry) => {
+            if (!entry.private || entry.user == user) {
+                return entry;
+            }
+        }) as Story[]
+        setStories(filtered)
+    }
+
+    const getAllStories = async () => {
+        try {
+            const list = await db.getAllAsync('SELECT * from stories');
+            setAllStories(list.reverse() as Story[]);
+        } catch (error) {
+            console.error('Could not get stories', error);
+        }
+        filterStories();
+    }
+
+                    {true ? (
+                    null
+                ) :
+                    (
+                        <View>
+                            <Text variant="titleLarge" style={styles.pageTitle}>Stories timeline</Text>
+                            <Text style={styles.marginWhite}>{JSON.stringify(stories)}</Text>
+                            <Text style={styles.marginWhite}>{JSON.stringify(allStories)}</Text>
+                        </View>
+                    )}
+*/

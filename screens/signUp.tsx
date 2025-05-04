@@ -1,14 +1,14 @@
+import { useState } from "react";
 import { ImageBackground, View } from "react-native";
 import { Button, Text, TextInput } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from '@react-navigation/stack';
+import { useSQLiteContext } from "expo-sqlite";
 
 import { useAuth } from "../resources/useAuth";
 import { useBackground } from "../resources/useBackground";
 import styles from "../resources/styles";
 import { NavigatorParams } from "../resources/customTypes";
-import { useState } from "react";
-import { useSQLiteContext } from "expo-sqlite";
 
 type navigatorProp = StackNavigationProp<NavigatorParams>;
 

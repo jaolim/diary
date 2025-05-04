@@ -148,6 +148,10 @@ Expo 53 olisi saatavilla, mutta päädyin tällä hetkellä pitämään projekti
 
 **Commit 16:** Added deletion of assosiacted image on story deletation and a backup source for background image if the API request fails
 
+### 04.05.2025
+
+**Commit 17:** Reduced Camera picture resolution to limit storage usage
+
 ## Lähteet
 
 Pitääkseni lähdemerkinnät mielekkäinä, olen listannut vain ne lähteet, joilla on ollut merkittävä merkitys koodini rakenteeseen.

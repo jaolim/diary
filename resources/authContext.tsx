@@ -1,9 +1,7 @@
 import { createContext, useState } from "react";
-
-import { ActiveUser, AuthContextType } from './customTypes'
 import { useSQLiteContext } from "expo-sqlite";
 
-import { User } from "./customTypes";
+import { ActiveUser, AuthContextType, User } from './customTypes'
 
 export const AuthContext = createContext<AuthContextType>(null);
 

@@ -1,22 +1,22 @@
 import { useEffect, useState } from "react";
 import { FlatList, ImageBackground, Keyboard, View } from "react-native"
-import { Button, Card, Text, TextInput } from "react-native-paper";
+import { Button, Card, IconButton, Text, TextInput } from "react-native-paper";
 import dayjs from "dayjs";
-
-import styles from "../resources/styles"
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useSQLiteContext } from "expo-sqlite";
 import * as FileSystem from 'expo-file-system';
 
+import styles from "../resources/styles"
 import { useBackground } from "../resources/useBackground";
-import { Comment, Story } from "../resources/customTypes";
-import { NavigatorParams } from "../resources/customTypes";
+import { Comment, NavigatorParams, Story } from "../resources/customTypes";
 import { useAuth } from "../resources/useAuth";
 
 type navigatorProp = StackNavigationProp<NavigatorParams>;
 
 export default function ViewStory({ route }: any) {
+    const [info, setInfo] = useState<Object>({})
+
     const navigation = useNavigation<navigatorProp>();
     const db = useSQLiteContext();
     const { background } = useBackground();
@@ -104,7 +104,6 @@ export default function ViewStory({ route }: any) {
         getComments();
     }, [story])
 
-
     return (
         <ImageBackground source={{ uri: background }} style={styles.center} resizeMode="cover">
             <View style={styles.center}>
@@ -113,20 +112,19 @@ export default function ViewStory({ route }: any) {
                         Home
                     </Button>
                     {user == story.user ? (
-                        <Button style={styles.margin} mode="contained" onPress={
+                        <IconButton style={styles.marginWhite} icon="trash-can" size={30} onPress={
                             () => {
                                 deleteStory();
                                 navigation.navigate('Home');
                             }
                         }>
-                            Delete Story
-                        </Button>
+                        </IconButton>
                     ) : (
                         null
                     )}
                 </View>
                 {story.id != '-1' ? (
-                    <Card style={{ minWidth: "95%" }}>
+                    <Card style={{ minWidth: "95%", width: 250 }}>
                         <Card.Title title={`${dayjs(story.time).format('DD/MM/YYYY - HH:mm')} by ${story.user}`} />
                         <View style={styles.row}>
                             <Card.Content>
@@ -147,7 +145,7 @@ export default function ViewStory({ route }: any) {
                     keyExtractor={item => item.id}
                     renderItem={({ item }) =>
                         <View style={styles.row}>
-                            <Card style={{ minWidth: "80%", margin: 5 }}>
+                            <Card style={{ width: "80%", margin: 5 }}>
                                 <Card.Title title={`${dayjs(item.time).format('DD/MM/YYYY - HH:mm')} by ${item.user}`} />
                                 <View style={styles.row}>
                                     <Card.Content>
@@ -155,9 +153,7 @@ export default function ViewStory({ route }: any) {
                                     </Card.Content>
                                     <Card.Actions>
                                         {user == item.user ? (
-                                            <Button style={styles.margin} mode="contained" onPress={() => deleteComment(item.id)}>
-                                                Delete
-                                            </Button>
+                                            <IconButton style={styles.marginWhite} icon="trash-can" size={30} onPress={() => deleteComment(item.id)} />
                                         ) : (
                                             null
                                         )}
@@ -165,8 +161,6 @@ export default function ViewStory({ route }: any) {
                                 </View>
                             </Card>
                         </View>
-
-
                     }
                     data={comments}
                 />
