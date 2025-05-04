@@ -154,9 +154,91 @@ Expo 53 olisi saatavilla, mutta päädyin tällä hetkellä pitämään projekti
 
 Katsoin tässä kohdassa myös mahdollisuutta pitää koko tarinalista muistissa ja hoitaa filteröinti ohjelmalogiikassa tietokantakyselyn sijaan, mutta ensimmäinen toteutus aiheutti bugeja renderöinnissä screenejä vaihdettaessa, joten jätin sen tekemättä.
 
+**Commit 18:** Fixed broken logic for validating unique username in signup screen
+
+### Android build
+
+Kokeilin tässä kohtaan androidille asennettavan buildin luontia. Tein tätä varten EAS tilin ja käytin [expon ohjeita](https://docs.expo.dev/build/introduction/).
+Ensimmäinen yritys tuotti .aab tiedoston, jonka asennus android puhelemiin olisi vaatinut erillisen sovelluksen, joten selvitin, että eas:in konffaus tapahtuu projektikansiossa olevan *eas.json* tiedoston kautta, ja lisäsin sinne productionin alle .apk tyypin määrityksen.
+
+```
+"android": {
+  "buildType": "apk"
+  }
+```
+
+Tämän jälkeen ajoin buildin uudestaan, ja lopputuloksena oli Android puhelimellani ilman lisäohjelmia asennettava ja toimiva versio.
+
+**Commit 19:** Added comments to code, added summary rection to learning dairy
+
+### Yhteenveto
+
+Alustavien speksien ominaisuuksista päädyin toteuttamaan kohdat 1 ja 2 kokonaisuudessaan ja kohdan 4 osittain. Kokonaan speksien ulkopuolisena ominaisuutena toteutin sovelluksen taustakuvien haun NASA:n APOD palvelusta.
+
+Pääsyy ominasuuksien supistemiselle oli odotettua työläämpi toteutus lokaaliin tallennukseen, jossa jouduin SQLite tietokannan lisäksi käyttämään FileSystemin kautta lokaalia tallennustilaa.
+Lisäksi omien kontekstien kirjoitus osoittautui vievän olettamaani enemmän aikaa, joten en kokenut pilvitallennuksen implementointia mielekkäänä, koska en olettanut ajan riittävän sen saamiseen järkevälle tasolle.
+
+#### Lopullinen rakenne**
+
+Sovellus koostuu *Home*, *NewStory*, *ViewStory*, *Signin* ja *Signup* ruuduista, joiden välinen navigaatio on hoidettu *react-navigationin* *stack* navigaattorilla.
+
+**Ruudut:**
+- Home: appin kotivisu, joka sisältää eri navigaationäppäimiä, sekä listan tarinoista, joita klikkaamalla pääsee tarkempaan näkymään kyseisestä tarinasta
+- NewStory: sivu uuden tarinan luonnille, jossa voidaan myös avata kameranäkymä kuvan ottamiseen, jos sellainen halutaan liittää tarinaan
+- ViewStory: yksittäisen tarinan näkymä, jossa on mahdollista kommentoida tarinaa
+- Signin: kirjautumissivu käyttäjille
+- Signup: sivu uuden käyttäjän luonnille
+
+*Viewstory* saa halutun tarinan id:n *react-navigationin* *routen* kautta. Muut sivut käyttävät konteksteja yhteisiin muuttujiin.
+
+**Kontekstit:**
+
+- Navigaatio (react-navigation): NavigationContinainer - useNavigation
+- Tietokanta (expo-sqlite): SQLiteProvider - useSQLiteContext
+- Taustakuva (custom): BackgroundProvider - useBackground
+- Käyttäjän tunnistus (custom): AuthProvider - useAuth
+
+**Rakenne (importit jätetty pois)**
+
+App.tsx
+```
+const Stack = createStackNavigator<NavigatorParams>();
+
+export default function App() {
+  return (
+    <PaperProvider>
+      <SQLiteProvider databaseName="stories.db" onInit={initializeDatabase}>
+        <BackgroundProvider>
+          <AuthProvider>
+            <NavigationContainer>
+              <Stack.Navigator>
+                <Stack.Screen name="Home" component={HomeScreen} />
+                <Stack.Screen name="NewStory" component={NewStory} />
+                <Stack.Screen name="ViewStory" component={ViewStory} />
+                <Stack.Screen name="Signin" component={Signin} />
+                <Stack.Screen name="Signup" component={Signup} />
+              </Stack.Navigator>
+            </NavigationContainer>
+          </AuthProvider>
+        </BackgroundProvider>
+      </SQLiteProvider>
+    </PaperProvider>
+  )
+}
+```
+
+**Luentojen ulkpuoliset kirjastot/laiteominaisuudet**
+
+*En ole pitänyt kirjaa, siitä, mitkä asiasta olivat jo luennoilta tuttuja, ja tämä lista on kirjoitettu muistini varassa selatessani importit läpi, eli virheitä saattaa olla.*
+
+- expo-file-system(laiteominaisuus/kirjasto): kirjasto tiedostojärjestelmän hallintaan
+- dayjs(kirjasto): kirjasto aikojan käsittelyyn
+
+
+
 ## Lähteet
 
-Pitääkseni lähdemerkinnät mielekkäinä, olen listannut vain ne lähteet, joilla on ollut merkittävä merkitys koodini rakenteeseen.
+*Pitääkseni lähdemerkinnät mielekkäinä, olen listannut vain ne lähteet, joilla on ollut merkittävä merkitys koodini rakenteeseen.*
 
 Juha Hinkula. [Mobile Programming Course - kurssimateriaali](https://haagahelia.github.io/mobilecourse/docs/intro/)
 

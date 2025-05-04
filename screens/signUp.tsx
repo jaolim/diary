@@ -14,33 +14,40 @@ import { NavigatorParams } from "../resources/customTypes";
 type navigatorProp = StackNavigationProp<NavigatorParams>;
 
 export default function Signup() {
+    // context varaibles
     const navigation = useNavigation<navigatorProp>();
     const db = useSQLiteContext();
     const { user, login, logout, register } = useAuth();
+    const { background } = useBackground();
+    // react controlled variables for input fields
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const { background } = useBackground();
+    // user list for checking if a name is already taken
     const [users, setUsers] = useState<string[]>([]);
 
+    // fills the users list via a database query
     const getUsers = async () => {
         const data = await db.getAllAsync('SELECT name FROM users') as User[];
-        setUsers(data.map((value) => value.name))
+        setUsers(data.map((value) => value.name));
     }
 
+    // calls register and login functions provided by authContext if the user name is unique
     const addUser = async (name: string, password: string) => {
         if (users.includes(name)) {
-            alert('Choose a unique username')
+            alert('Choose a unique username');
         } else {
             register(name, password);
             login(name, password);
-            navigation.navigate('Home')
+            navigation.navigate('Home');
         }
     }
 
+    // fills the user list on page load
     useEffect(() => {
         getUsers();
     }, [])
 
+    // sign up view with navigation buttons, input fields for user name and password and a sign up button for calling addUser function
     return (
         <ImageBackground source={{ uri: background }} style={styles.center} resizeMode="cover">
             <View style={styles.center}>

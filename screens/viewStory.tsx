@@ -15,14 +15,19 @@ import { useAuth } from "../resources/useAuth";
 type navigatorProp = StackNavigationProp<NavigatorParams>;
 
 export default function ViewStory({ route }: any) {
+    // context variables
     const navigation = useNavigation<navigatorProp>();
     const db = useSQLiteContext();
     const { background } = useBackground();
     const { user } = useAuth();
+    // variable for storing the story id from react navigation route
     const thisId = route.params.id;
+    // comments list and comment input value variables
     const [comments, setComments] = useState<Comment[]>([]);
     const [comment, setComment] = useState('');
+    // variable for disabling comment input field
     const [isDisabled, setIsDisabled] = useState(false);
+    // variabled for currently displayed story
     const [story, setStory] = useState<Story>(
         {
             id: '-1',
@@ -35,6 +40,7 @@ export default function ViewStory({ route }: any) {
         }
     );
 
+    // story getter from a database that calls setStory to save the query result
     const getStory = async () => {
         try {
             const getStory = await db.getAllAsync('SELECT * from stories WHERE id = (?)', thisId);
@@ -44,6 +50,7 @@ export default function ViewStory({ route }: any) {
         }
     }
 
+    // comments getter from a database that calls setComments to save the query result
     const getComments = async () => {
         try {
             const list = await db.getAllAsync('SELECT * from comments WHERE storyId = (?)', story.id);
@@ -53,6 +60,7 @@ export default function ViewStory({ route }: any) {
         }
     }
 
+    // deletes story and an associated image if there is one
     const deleteStory = async () => {
         try {
             db.runAsync('DELETE from stories WHERE id = (?)', thisId)
@@ -69,6 +77,7 @@ export default function ViewStory({ route }: any) {
         }
     }
 
+    // adds a comment to database, resets comment input fiel, dimisses keyboard, and reloads comments list
     const addComment = async () => {
         const time = dayjs().toISOString();
         try {
@@ -81,6 +90,7 @@ export default function ViewStory({ route }: any) {
         getComments();
     }
 
+    // deletes a comment and reloads comments
     const deleteComment = async (id: string) => {
         try {
             db.runAsync('DELETE from comments WHERE id = (?)', id);
@@ -90,6 +100,7 @@ export default function ViewStory({ route }: any) {
         getComments();
     }
 
+    // loads the story, loads comments, and disables comment field if viewed as a guest on page load
     useEffect(() => {
         getStory();
         getComments();
@@ -98,10 +109,13 @@ export default function ViewStory({ route }: any) {
         }
     }, [])
 
+    // loads comments if value of the story changes
     useEffect(() => {
         getComments();
     }, [story])
 
+    // Story and comment view for a specific story with conditional delete buttons rendered based on story/comment ownership
+    // The story is in a single Card component and comments are in Cards inside a FlatList
     return (
         <ImageBackground source={{ uri: background }} style={styles.center} resizeMode="cover">
             <View style={styles.center}>

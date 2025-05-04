@@ -1,5 +1,5 @@
-import { FlatList, ImageBackground, TouchableOpacity, View } from "react-native";
 import { useEffect, useState } from "react";
+import { FlatList, ImageBackground, TouchableOpacity, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useSQLiteContext } from "expo-sqlite";
@@ -14,19 +14,19 @@ import styles from "../resources/styles"
 import { useAuth } from "../resources/useAuth";
 import { useBackground } from "../resources/useBackground";
 
-
-
-
 type navigatorProp = StackNavigationProp<NavigatorParams>;
 
 export default function HomeScreen() {
+    // Context variables
     const navigation = useNavigation<navigatorProp>();
     const db = useSQLiteContext();
     const { active, user, logout } = useAuth();
     const { background, fetchBackground } = useBackground();
-    const directory = `${FileSystem.documentDirectory}diary`
-    const [stories, setStories] = useState<Story[]>();
 
+    const directory = `${FileSystem.documentDirectory}diary` // directory variable for local image directory
+    const [stories, setStories] = useState<Story[]>(); // stories list that will have its value assigned by getStories function via a database query
+
+    // Stories getter for public stories or stories by current user
     const getStories = async () => {
         try {
             const list = await db.getAllAsync('SELECT * from stories WHERE user = (?) OR private = false', user);
@@ -36,6 +36,7 @@ export default function HomeScreen() {
         }
     }
 
+    // Database reset and reinitializer
     const resetDB = async () => {
         try {
             await db.runAsync('DROP table stories');
@@ -59,10 +60,12 @@ export default function HomeScreen() {
         active();
     }
 
+    // Deletes saved pictures by clearing the local folder used by FileSystem
     const deletePictures = async () => {
         FileSystem.deleteAsync(directory);
     }
 
+    // UseEffect on screen load that checks for active user in database, loads stories and loads background if one is not active, uncomment resetDB() to clear database on restart
     useEffect(() => {
         //resetDB();
         active();
@@ -72,10 +75,12 @@ export default function HomeScreen() {
         }
     }, [])
 
+    // UseEffect for reloading stories if active user changes
     useEffect(() => {
         getStories();
     }, [user])
 
+    // HomeScreen view with background image via background context, active user status and navigation buttons on top and clickabale Cards generated in FlatList at bottom
     return (
         <ImageBackground source={{ uri: background }} style={styles.center} resizeMode="cover">
             <View style={styles.center}>

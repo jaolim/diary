@@ -6,9 +6,12 @@ import { ActiveUser, AuthContextType, User } from './customTypes'
 export const AuthContext = createContext<AuthContextType>(null);
 
 export const AuthProvider = ({ children }: any) => {
+  // variable for database context
   const db = useSQLiteContext();
+  // variable for tracking active user
   const [user, setUser] = useState<any>();
 
+  // try to log in(match provided login details with an entry in database and setting that entry's name as the active user) with nested try/catch structure for different fail states, also sets that user as active user via database insertion
   const login = async (name: string, password: string) => {
     if (name == user) {
       alert('You are already logged in')
@@ -44,6 +47,7 @@ export const AuthProvider = ({ children }: any) => {
     return true;
   }
 
+  // register a new user and log that user in, logic for checking duplicate names is handlded in signUp screen
   const register = async (name: string, password: string) => {
     try {
       await db.runAsync('INSERT into users (name, password) VALUES (?, ?)', name, password)
@@ -53,6 +57,7 @@ export const AuthProvider = ({ children }: any) => {
     }
   }
 
+  // logs the current user out and removes active user info from database
   const logout = async () => {
     try {
       await db.runAsync('DELETE from activeuser')
@@ -62,6 +67,7 @@ export const AuthProvider = ({ children }: any) => {
     }
   }
 
+  // queries database for active user and sets that user as active user if found, and null if not
   const active = async () => {
     const active = await db.getFirstAsync('SELECT * from activeuser') as ActiveUser
     if (active) {
@@ -71,6 +77,7 @@ export const AuthProvider = ({ children }: any) => {
     }
   }
 
+  // returns context for the value of user, as well as access to login, register, logout and active functions
   return (
     <AuthContext.Provider value={{ user, login, register, logout, active }}>
       {children}

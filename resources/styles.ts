@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 
+// sheet for custom styles
 export default StyleSheet.create({
     borderBlue: {
         padding: 10,

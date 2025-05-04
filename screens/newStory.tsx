@@ -14,48 +14,36 @@ import { useAuth } from "../resources/useAuth";
 
 type navigatorProp = StackNavigationProp<NavigatorParams>;
 
-export default function NewStory({ route }: any) {
-    const time = dayjs().toISOString();
+export default function NewStory() {
+    //context variables
     const db = useSQLiteContext();
     const navigation = useNavigation<navigatorProp>();
+    const { user } = useAuth();
+    // Story related variables
+    const time = dayjs().toISOString();
     const [header, setHeader] = useState("");
     const [body, setBody] = useState("");
+    const [isPrivate, setIsPrivate] = useState(false)
+    const [status, setStatus] = useState<'unchecked' | 'checked'>('unchecked');
     const [isDisabled, setIsDisabled] = useState(false);
+    //camera and image related variables
+    const camera = useRef(null) as any
     const [imageKey, setImageKey] = useState('-1')
     const [imageId, setImageId] = useState('-1')
     const [imageName, setImageName] = useState('');
     const [imageBase64, setImageBase64] = useState('');
     const [permission, requestPermission] = useCameraPermissions();
-    const [modalVisible, setModalVisible] = useState(true)
-    const camera = useRef(null) as any
     const directory = `${FileSystem.documentDirectory}diary/`
-    const { user } = useAuth();
-    const [status, setStatus] = useState<'unchecked' | 'checked'>('unchecked');
-    const [isPrivate, setIsPrivate] = useState(false)
+    // Controls if main page via Modal or the CameraView is visible
+    const [modalVisible, setModalVisible] = useState(true)
 
-    const [info, setInfo] = useState<Object>()
-    const [sizes, setSizes] = useState<string[]>()
-
-    const getInfo = async () => {
-        try {
-            const getSizes = await camera.current.getAvailablePictureSizesAsync();
-            setSizes(getSizes)
-        } catch (error) {
-            console.error('Could not get file info', error)
-        }
-        try {
-            const fileInfo = await FileSystem.getInfoAsync(imageName) as Object
-            setInfo(fileInfo)
-        } catch (error) {
-            console.error('Could not get file info', error)
-        }
-    }
-
+    // Function for toggling public/private ToggleButton
     const onButtonToggle = () => {
         setStatus(status === 'unchecked' ? 'checked' : 'unchecked');
         setIsPrivate(isPrivate === false ? true : false);
     }
 
+    // Takes picture
     const snap = async () => {
         if (camera) {
             const photo = await camera.current.takePictureAsync({ base64: true });
@@ -66,6 +54,7 @@ export default function NewStory({ route }: any) {
         }
     }
 
+    // Saves Story to local database
     const saveStory = async () => {
         try {
             await db.runAsync('INSERT INTO stories (id, user, time, header, body, image, private) VALUES (?, ?, ?, ?, ?, ?, ?)', time + user, user, time, header, body, imageKey, isPrivate);
@@ -77,6 +66,7 @@ export default function NewStory({ route }: any) {
         navigation.navigate('Home');
     }
 
+    // Saves image from cache to permanent local storage
     const saveImage = async () => {
         if (imageKey != '-1') {
             FileSystem.deleteAsync(directory);
@@ -90,22 +80,26 @@ export default function NewStory({ route }: any) {
         }
     }
 
+    // Checks if a user is active and disables text inputs if not
     const isLogged = () => {
         if (!user) {
             setIsDisabled(true);
         }
     }
 
+    // Calls for a logged user check on page load
     useEffect(() => {
         isLogged();
     }, [])
 
+    // This is an empty view for when camera permission is still loading
     if (!permission) {
         return (
             <View />
         )
     }
 
+    // This is the view for requesting Camera permission
     if (!permission.granted) {
         return (
             <View style={styles.center}>
@@ -122,6 +116,7 @@ export default function NewStory({ route }: any) {
         )
     }
 
+    // This view defaults to a Modal with text inputs for a new story that can be dismissed to reveal a camera view for taking a picture to add to that story, also has some conditional renders if no user is signed in
     return (
         <View style={styles.center}>
             <Modal

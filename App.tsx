@@ -14,6 +14,7 @@ import ViewStory from './screens/viewStory';
 import Signin from './screens/signIn';
 import Signup from './screens/signUp';
 
+// variable for navigation
 const Stack = createStackNavigator<NavigatorParams>();
 
 export default function App() {

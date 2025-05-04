@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { ImageBackground, View } from "react-native";
 import { Button, Text, TextInput } from "react-native-paper";
-import { useSQLiteContext } from "expo-sqlite";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from '@react-navigation/stack';
 
@@ -13,13 +12,17 @@ import { NavigatorParams } from "../resources/customTypes";
 type navigatorProp = StackNavigationProp<NavigatorParams>;
 
 export default function Signin() {
+    // context variables
     const navigation = useNavigation<navigatorProp>();
     const { user, logout, login } = useAuth();
+    const { background } = useBackground();
+    // react controlled variables for input fields
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    // variable for disabling input fields
     const [isDisabled, setIsDisabled] = useState(false);
-    const { background } = useBackground();
 
+    //Log in view with some navigation buttons and user/password inputs, login verification is handled via authContext function login
     return (
         <ImageBackground source={{ uri: background }} style={styles.center} resizeMode="cover">
             <View style={styles.center}>
