@@ -24,7 +24,7 @@ export default function NewStory() {
     const [header, setHeader] = useState("");
     const [body, setBody] = useState("");
     const [isPrivate, setIsPrivate] = useState(false)
-    const [status, setStatus] = useState<'unchecked' | 'checked'>('unchecked');
+    const [buttonMode, setButtonMode] = useState<'outlined' | 'contained'>('outlined')
     const [isDisabled, setIsDisabled] = useState(false);
     //camera and image related variables
     const camera = useRef(null) as any
@@ -37,9 +37,9 @@ export default function NewStory() {
     // Controls if main page via Modal or the CameraView is visible
     const [modalVisible, setModalVisible] = useState(true)
 
-    // Function for toggling public/private ToggleButton
+    // Function for toggling public/private button
     const onButtonToggle = () => {
-        setStatus(status === 'unchecked' ? 'checked' : 'unchecked');
+        setButtonMode(buttonMode === 'outlined' ? 'contained' : 'outlined');
         setIsPrivate(isPrivate === false ? true : false);
     }
 
@@ -138,19 +138,13 @@ export default function NewStory() {
                             value={header}
                             onChangeText={text => setHeader(text)}
                         />
-                        <ToggleButton
-                            icon='adjust'
-                            value='private'
-                            status={status}
-                            onPress={onButtonToggle}
-                        />
-                        <Text>
-                            {status == 'unchecked' ? (
-                                'Public'
-                            ) : (
+                        <Button style={styles.margin} icon="adjust" mode={buttonMode} onPress={onButtonToggle} disabled={isDisabled}>
+                            {isPrivate ? (
                                 'Private'
+                            ) : (
+                                'Public'
                             )}
-                        </Text>
+                        </Button>
                     </View>
                     <TextInput
                         style={styles.inputBody}
@@ -179,26 +173,26 @@ export default function NewStory() {
                     </View>
                     <View style={styles.row}>
                         {user ? (
-                            <Button mode="contained" onPress={saveStory}>
+                            <Button mode="contained" icon="content-save" onPress={saveStory}>
                                 Add Story
                             </Button>
                         ) : (
                             null
                         )}
                         {user ? (
-                            <Button mode="contained" onPress={() => {
+                            <Button mode="contained" icon="camera" onPress={() => {
                                 setModalVisible(false);
                             }}>
                                 Take Picture
                             </Button>
                         ) : (
-                            <Button mode="contained" onPress={() => {
+                            <Button mode="contained" icon="login" onPress={() => {
                                 navigation.navigate('Signin');
                             }}>
                                 Login
                             </Button>
                         )}
-                        <Button mode="contained" onPress={() => {
+                        <Button mode="contained" icon="home" onPress={() => {
                             if (imageKey != '-1') {
                                 FileSystem.deleteAsync(imageKey);
                             }
@@ -225,10 +219,10 @@ export default function NewStory() {
                 )}
             </View>
             <View style={styles.row}>
-                <Button style={styles.margin} mode="contained" onPress={snap}>
+                <Button style={styles.margin} icon="camera" mode="contained" onPress={snap}>
                     Take Picture
                 </Button>
-                <Button style={styles.margin} mode="contained" onPress={() =>
+                <Button style={styles.margin} mode="contained" icon="close" onPress={() =>
                     setModalVisible(true)
                 }>
                     Close Camera

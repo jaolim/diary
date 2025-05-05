@@ -171,6 +171,8 @@ Tämän jälkeen ajoin buildin uudestaan, ja lopputuloksena oli Android puhelime
 
 **Commit 19:** Added comments to code, added summary rection to learning dairy
 
+**Commit 20:** Removed FlatList and added ScrollView to viewStory screen, added icons to most buttons
+
 ### Yhteenveto
 
 Alustavien speksien ominaisuuksista päädyin toteuttamaan kohdat 1 ja 2 kokonaisuudessaan ja kohdan 4 osittain. Kokonaan speksien ulkopuolisena ominaisuutena toteutin sovelluksen taustakuvien haun NASA:n APOD palvelusta.

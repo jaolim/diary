@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { FlatList, ImageBackground, Keyboard, View } from "react-native"
-import { Button, Card, IconButton, Text, TextInput } from "react-native-paper";
+import { FlatList, ImageBackground, Keyboard, ScrollView, View } from "react-native"
+import { Button, Card, IconButton, Paragraph, Text, Title, TextInput } from "react-native-paper";
 import dayjs from "dayjs";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -11,6 +11,7 @@ import styles from "../resources/styles"
 import { useBackground } from "../resources/useBackground";
 import { Comment, NavigatorParams, Story } from "../resources/customTypes";
 import { useAuth } from "../resources/useAuth";
+
 
 type navigatorProp = StackNavigationProp<NavigatorParams>;
 
@@ -39,6 +40,7 @@ export default function ViewStory({ route }: any) {
             private: false
         }
     );
+    const [isFirst, setIsFirst] = useState(true)
 
     // story getter from a database that calls setStory to save the query result
     const getStory = async () => {
@@ -54,6 +56,7 @@ export default function ViewStory({ route }: any) {
     const getComments = async () => {
         try {
             const list = await db.getAllAsync('SELECT * from comments WHERE storyId = (?)', story.id);
+            setIsFirst(true)
             setComments(list.reverse() as Comment[]);
         } catch (error) {
             console.error('Could not get stories', error);
@@ -120,7 +123,7 @@ export default function ViewStory({ route }: any) {
         <ImageBackground source={{ uri: background }} style={styles.center} resizeMode="cover">
             <View style={styles.center}>
                 <View style={styles.row}>
-                    <Button style={styles.margin} mode="contained" onPress={() => navigation.navigate('Home')}>
+                    <Button style={styles.margin} mode="contained" icon="home" onPress={() => navigation.navigate('Home')}>
                         Home
                     </Button>
                     {user == story.user ? (
@@ -135,47 +138,45 @@ export default function ViewStory({ route }: any) {
                         null
                     )}
                 </View>
-                {story.id != '-1' ? (
-                    <Card style={{ minWidth: "95%", width: 250 }}>
-                        <Card.Title title={`${dayjs(story.time).format('DD/MM/YYYY - HH:mm')} by ${story.user}`} />
-                        <View style={styles.row}>
-                            <Card.Content>
-                                <Text variant="titleLarge">{story.header}</Text>
-                                <Text variant="bodyMedium">{story.body}</Text>
-                            </Card.Content>
-                            {story.image != '-1' ? (
-                                <Card.Cover source={{ uri: story.image }} style={{ minWidth: "40%" }} resizeMode="contain" />
-                            ) : (
-                                null
-                            )}
-                        </View>
-                    </Card>
-                ) : (
-                    null
-                )}
-                <FlatList
-                    keyExtractor={item => item.id}
-                    renderItem={({ item }) =>
-                        <View style={styles.row}>
-                            <Card style={{ width: "80%", margin: 5 }}>
-                                <Card.Title title={`${dayjs(item.time).format('DD/MM/YYYY - HH:mm')} by ${item.user}`} />
-                                <View style={styles.row}>
-                                    <Card.Content>
-                                        <Text variant="bodyMedium">{item.comment}</Text>
-                                    </Card.Content>
-                                    <Card.Actions>
-                                        {user == item.user ? (
-                                            <IconButton style={styles.marginWhite} icon="trash-can" size={30} onPress={() => deleteComment(item.id)} />
-                                        ) : (
-                                            null
-                                        )}
-                                    </Card.Actions>
-                                </View>
-                            </Card>
-                        </View>
-                    }
-                    data={comments}
-                />
+                <ScrollView>
+                    {story.id != '-1' ? (
+                        <Card style={{ minWidth: "95%", width: 250 }}>
+                            <Card.Title title={`${dayjs(story.time).format('DD/MM/YYYY - HH:mm')} by ${story.user}`} />
+                            <View style={styles.row}>
+                                <Card.Content>
+                                    <Title>{story.header}</Title>
+                                    <Paragraph>{story.body}</Paragraph>
+                                    {story.image != '-1' ? (
+                                        <Card.Cover source={{ uri: story.image }} style={{ minWidth: "40%" }} resizeMode="contain" />
+                                    ) : (
+                                        null
+                                    )}
+                                </Card.Content>
+                            </View>
+                        </Card>
+                    ) : (
+                        null
+                    )}
+                    <View style={styles.column}>
+                        {comments.map((item, index) => {
+                            return (
+                                <Card style={styles.column}>
+                                    <Card.Title title={`${dayjs(item.time).format('DD/MM/YYYY - HH:mm')} by ${item.user}`} />
+                                        <Card.Content>
+                                            <Paragraph>{item.comment}</Paragraph>
+                                        </Card.Content>
+                                        <Card.Actions>
+                                            {user == item.user ? (
+                                                <IconButton style={styles.marginWhite} icon="trash-can" size={20} onPress={() => deleteComment(item.id)} />
+                                            ) : (
+                                                null
+                                            )}
+                                        </Card.Actions>
+                                </Card>
+                            );
+                        })}
+                    </View>
+                </ScrollView>
             </View>
             <View style={styles.row}>
                 <TextInput
@@ -195,7 +196,7 @@ export default function ViewStory({ route }: any) {
                     </Button>
                 )}
             </View>
-        </ImageBackground>
+        </ImageBackground >
     )
 
 }

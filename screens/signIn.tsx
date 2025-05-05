@@ -19,8 +19,6 @@ export default function Signin() {
     // react controlled variables for input fields
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    // variable for disabling input fields
-    const [isDisabled, setIsDisabled] = useState(false);
 
     //Log in view with some navigation buttons and user/password inputs, login verification is handled via authContext function login
     return (
@@ -33,10 +31,10 @@ export default function Signin() {
                 )}
 
                 <View style={styles.row}>
-                    <Button style={styles.margin} mode="contained" onPress={() => navigation.navigate('Home')}>
+                    <Button style={styles.margin} mode="contained" icon="home" onPress={() => navigation.navigate('Home')}>
                         Home
                     </Button>
-                    <Button style={styles.margin} mode="contained" onPress={logout}>
+                    <Button style={styles.margin} mode="contained" icon="logout" onPress={logout}>
                         Logout
                     </Button>
                 </View>
@@ -45,7 +43,6 @@ export default function Signin() {
                     label="Name"
                     value={username}
                     onChangeText={text => setUsername(text)}
-                    disabled={isDisabled}
                 />
                 <TextInput
                     style={styles.inputTitle}
@@ -53,9 +50,8 @@ export default function Signin() {
                     label="Password"
                     value={password}
                     onChangeText={text => setPassword(text)}
-                    disabled={isDisabled}
                 />
-                <Button style={styles.margin} mode="contained" onPress={async () => {
+                <Button style={styles.margin} mode="contained" icon="login" onPress={async () => {
                     const logged = await login(username, password);
                     if (logged) {
                         navigation.navigate('Home');

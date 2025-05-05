@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { FlatList, ImageBackground, TouchableOpacity, View } from "react-native";
+import { Alert, FlatList, ImageBackground, TouchableOpacity, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useSQLiteContext } from "expo-sqlite";
-import { Button, Card, Text } from "react-native-paper";
+import { Button, Card, Paragraph, Text, Title } from "react-native-paper";
 import * as FileSystem from 'expo-file-system';
 import dayjs from "dayjs";
 
@@ -60,6 +60,19 @@ export default function HomeScreen() {
         active();
     }
 
+    // Confirmation popup for ResetDB call
+    const resetDBPopup = async () => {
+        Alert.alert('Confirm to reset database', 'Warning: this will delete all users, stories and pictures.', [
+            {
+                text: 'Cancel'
+            },
+            {
+                text: 'Confirm',
+                onPress: () => resetDB()
+            }
+        ]);
+    }
+
     // Deletes saved pictures by clearing the local folder used by FileSystem
     const deletePictures = async () => {
         FileSystem.deleteAsync(directory);
@@ -90,13 +103,13 @@ export default function HomeScreen() {
                     <Text style={styles.user} variant="titleLarge">User: Guest</Text>
                 )}
                 <View style={styles.row}>
-                    <Button style={styles.margin} mode="contained" onPress={() => navigation.navigate('Signin')}>
+                    <Button style={styles.margin} mode="contained" icon="login" onPress={() => navigation.navigate('Signin')}>
                         Login
                     </Button>
-                    <Button style={styles.margin} mode="contained" onPress={() => navigation.navigate('Signup')}>
+                    <Button style={styles.margin} mode="contained" icon="account" onPress={() => navigation.navigate('Signup')}>
                         Sign up
                     </Button>
-                    <Button style={styles.margin} mode="contained" onPress={async () => {
+                    <Button style={styles.margin} mode="contained" icon="logout" onPress={async () => {
                         const loggedOut = await logout();
                         if (loggedOut) {
                             getStories();
@@ -106,10 +119,10 @@ export default function HomeScreen() {
                     </Button>
                 </View>
                 <View style={styles.row}>
-                    <Button style={styles.margin} mode="contained" onPress={() => navigation.navigate('NewStory')} >
+                    <Button style={styles.margin} mode="contained" icon="newspaper" onPress={() => navigation.navigate('NewStory')}>
                         New Story
                     </Button>
-                    <Button style={styles.margin} mode="contained" onPress={resetDB} buttonColor="red">
+                    <Button style={styles.margin} mode="contained" icon="database" onPress={resetDBPopup} buttonColor="red">
                         Reset DB
                     </Button>
                 </View>
@@ -125,16 +138,16 @@ export default function HomeScreen() {
                             <View>
                                 <Card style={{ minWidth: "80%", margin: 5 }}>
                                     <Card.Title title={`${dayjs(item.time).format('DD/MM/YYYY - HH:mm')} by ${item.user}`} />
-                                    <View style={styles.row}>
+                                    <View>
                                         <Card.Content>
-                                            <Text variant="titleLarge">{item.header}</Text>
-                                            <Text variant="bodyMedium">{item.body}</Text>
+                                            <Title>{item.header}</Title>
+                                            <Paragraph>{item.body}</Paragraph>
+                                            {item.image != '-1' ? (
+                                                <Card.Cover source={{ uri: item.image }} style={{ minWidth: "30%" }} resizeMode='contain' />
+                                            ) : (
+                                                null
+                                            )}
                                         </Card.Content>
-                                        {item.image != '-1' ? (
-                                            <Card.Cover source={{ uri: item.image }} style={{ minWidth: "30%" }} resizeMode='contain' />
-                                        ) : (
-                                            null
-                                        )}
                                     </View>
                                 </Card>
                             </View>

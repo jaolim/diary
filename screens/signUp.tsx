@@ -57,10 +57,10 @@ export default function Signup() {
                     <Text style={styles.user} variant="titleLarge">User: Guest</Text>
                 )}
                 <View style={styles.row}>
-                    <Button style={styles.margin} mode="contained" onPress={logout}>
+                    <Button style={styles.margin} mode="contained" icon="logout" onPress={logout}>
                         Logout
                     </Button>
-                    <Button style={styles.margin} mode="contained" onPress={() => navigation.navigate('Home')}>
+                    <Button style={styles.margin} mode="contained" icon="home" onPress={() => navigation.navigate('Home')}>
                         Home
                     </Button>
                 </View>
@@ -77,7 +77,7 @@ export default function Signup() {
                     value={password}
                     onChangeText={text => setPassword(text)}
                 />
-                <Button style={styles.margin} mode="contained" onPress={() => addUser(username, password)}>
+                <Button style={styles.margin} mode="contained" icon="account" onPress={() => addUser(username, password)}>
                     Sign up
                 </Button>
             </View>
