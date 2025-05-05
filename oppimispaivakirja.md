@@ -169,7 +169,7 @@ Ensimmäinen yritys tuotti .aab tiedoston, jonka asennus android puhelemiin olis
 
 Tämän jälkeen ajoin buildin uudestaan, ja lopputuloksena oli Android puhelimellani ilman lisäohjelmia asennettava ja toimiva versio.
 
-**Commit 19:** Added comments to code, added summary rection to learning dairy
+**Commit 19:** Added comments to code, added summary section to learning dairy
 
 ### 05.05.2025
 
@@ -244,7 +244,7 @@ export default function App() {
 }
 ```
 
-**Luentojen ulkpuoliset kirjastot/laiteominaisuudet**
+**Luentojen ulkopuoliset kirjastot/laiteominaisuudet**
 
 *En pitänyt kirjaa siitä, mitkä asiasta olivat jo luennoilta tuttuja, joten tämä lista on kirjoitettu muistini varassa selatessani importit läpi, eli virheitä saattaa olla.*
 
