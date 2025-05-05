@@ -226,7 +226,9 @@ export default function App() {
         <BackgroundProvider>
           <AuthProvider>
             <NavigationContainer>
-              <Stack.Navigator>
+              <Stack.Navigator
+              screenOptions={{headerLeft: () => null}}
+              >
                 <Stack.Screen name="Home" component={HomeScreen} />
                 <Stack.Screen name="NewStory" component={NewStory} />
                 <Stack.Screen name="ViewStory" component={ViewStory} />
