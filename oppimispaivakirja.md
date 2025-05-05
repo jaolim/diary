@@ -171,6 +171,8 @@ Tämän jälkeen ajoin buildin uudestaan, ja lopputuloksena oli Android puhelime
 
 **Commit 19:** Added comments to code, added summary rection to learning dairy
 
+### 05.05.2025
+
 **Commit 20:** Removed FlatList and added ScrollView to viewStory screen, added icons to most buttons
 
 ### Yhteenveto
@@ -180,7 +182,8 @@ Kokonaan speksien ulkopuolisena ominaisuutena toteutin sovelluksen taustakuvien 
 
 Pääsyy ominasuuksien supistemiselle oli odotettua työläämpi toteutus lokaaliin tallennukseen, jossa jouduin SQLite tietokannan lisäksi käyttämään FileSystemin kautta lokaalia tallennustilaa.
 Lisäksi omien kontekstien kirjoitus osoittautui vievän olettamaani enemmän aikaa, joten en kokenut pilvitallennuksen implementointia mielekkäänä, koska en olettanut ajan riittävän sen saamiseen järkevälle tasolle.
-En ollut myöskään käyttänyt TypeScriptiä ennen tätä kurssi, joten vaikka kirjoitin valta osa viikkotehtävistä sitä käyttäen, oli siihen totuttelu myös projektissa hidastava tekijä
+
+En ollut myöskään käyttänyt TypeScriptiä ennen tätä kurssia, joten vaikka kirjoitin valta osa viikkotehtävistä sitä käyttäen, oli siihen totuttelu myös projektia hidastava tekijä
 
 Alkuperäistä suunnitelmaa laajempi toteutus oli aktiivista käyttäjää seuraava ja kirjautumis- sekä käyttäjänluontifunktioita tarjoava custom context AuthContext.
 
@@ -241,12 +244,14 @@ export default function App() {
 
 **Luentojen ulkpuoliset kirjastot/laiteominaisuudet**
 
-*En ole pitänyt kirjaa, siitä, mitkä asiasta olivat jo luennoilta tuttuja, ja tämä lista on kirjoitettu muistini varassa selatessani importit läpi, eli virheitä saattaa olla.*
+*En pitänyt kirjaa siitä, mitkä asiasta olivat jo luennoilta tuttuja, joten tämä lista on kirjoitettu muistini varassa selatessani importit läpi, eli virheitä saattaa olla.*
 
 - expo-file-system(laiteominaisuus/kirjasto): kirjasto tiedostojärjestelmän hallintaan
 - dayjs(kirjasto): kirjasto aikojan käsittelyyn
 
 **Android buildin repositorio:** https://github.com/jaolim/diary-android-build
+
+*Buildi tehty EAS Buildin kautta käyttäen maksutonta versiota*
 
 ## Lähteet
 
