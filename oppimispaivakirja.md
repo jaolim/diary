@@ -175,12 +175,16 @@ Tämän jälkeen ajoin buildin uudestaan, ja lopputuloksena oli Android puhelime
 
 ### Yhteenveto
 
-Alustavien speksien ominaisuuksista päädyin toteuttamaan kohdat 1 ja 2 kokonaisuudessaan ja kohdan 4 osittain. Kokonaan speksien ulkopuolisena ominaisuutena toteutin sovelluksen taustakuvien haun NASA:n APOD palvelusta.
+Alustavien speksien ominaisuuksista päädyin toteuttamaan kohdat 1 ja 2 kokonaisuudessaan ja kohdan 4 osittain.
+Kokonaan speksien ulkopuolisena ominaisuutena toteutin sovelluksen taustakuvien haun NASA:n APOD palvelusta ja kamerakuvien pysyvän tallenuksen lokaaliin tiedostojärjestelmään (aluksi oli tarkoitus tallentaa tietokantaan).
 
 Pääsyy ominasuuksien supistemiselle oli odotettua työläämpi toteutus lokaaliin tallennukseen, jossa jouduin SQLite tietokannan lisäksi käyttämään FileSystemin kautta lokaalia tallennustilaa.
 Lisäksi omien kontekstien kirjoitus osoittautui vievän olettamaani enemmän aikaa, joten en kokenut pilvitallennuksen implementointia mielekkäänä, koska en olettanut ajan riittävän sen saamiseen järkevälle tasolle.
+En ollut myöskään käyttänyt TypeScriptiä ennen tätä kurssi, joten vaikka kirjoitin valta osa viikkotehtävistä sitä käyttäen, oli siihen totuttelu myös projektissa hidastava tekijä
 
-#### Lopullinen rakenne**
+Alkuperäistä suunnitelmaa laajempi toteutus oli aktiivista käyttäjää seuraava ja kirjautumis- sekä käyttäjänluontifunktioita tarjoava custom context AuthContext.
+
+#### Lopullinen rakenne
 
 Sovellus koostuu *Home*, *NewStory*, *ViewStory*, *Signin* ja *Signup* ruuduista, joiden välinen navigaatio on hoidettu *react-navigationin* *stack* navigaattorilla.
 
@@ -200,9 +204,15 @@ Sovellus koostuu *Home*, *NewStory*, *ViewStory*, *Signin* ja *Signup* ruuduista
 - Taustakuva (custom): BackgroundProvider - useBackground
 - Käyttäjän tunnistus (custom): AuthProvider - useAuth
 
+**Aputiedostot:**
+
+- customTypes.ts: TypeScript tyypimäärittelyjä
+- styles.ts: custom stylesheet
+- initializeDatabase.tsx: database konfiguraatio
+
 **Rakenne (importit jätetty pois)**
 
-App.tsx
+App.tsx:
 ```
 const Stack = createStackNavigator<NavigatorParams>();
 
@@ -236,7 +246,7 @@ export default function App() {
 - expo-file-system(laiteominaisuus/kirjasto): kirjasto tiedostojärjestelmän hallintaan
 - dayjs(kirjasto): kirjasto aikojan käsittelyyn
 
-
+**Android buildin repositorio:** https://github.com/jaolim/diary-android-build
 
 ## Lähteet
 
