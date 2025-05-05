@@ -19,6 +19,15 @@ export default StyleSheet.create({
         padding: 5,
         margin: 5
     },
+    header: {
+      paddingTop: 15,
+      paddingBottom: 15,
+      paddingLeft: 15,
+      paddingRight: 15,
+      borderRadius: 30,
+      marginRight: 20,
+      backgroundColor: "gray",
+    },
     inputBody: {
         marginTop: 10,
         marginBottom: 10,
@@ -33,7 +42,7 @@ export default StyleSheet.create({
     inputTitle: {
         marginTop: 10,
         marginBottom: 10,
-        width: 200,
+        width: 180,
     },
     margin: {
         margin: 5

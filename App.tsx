@@ -1,4 +1,4 @@
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { PaperProvider } from 'react-native-paper';
 import { SQLiteProvider } from 'expo-sqlite';
@@ -24,7 +24,9 @@ export default function App() {
         <BackgroundProvider>
           <AuthProvider>
             <NavigationContainer>
-              <Stack.Navigator>
+              <Stack.Navigator
+              screenOptions={{headerLeft: () => null}}
+              >
                 <Stack.Screen name="Home" component={HomeScreen} />
                 <Stack.Screen name="NewStory" component={NewStory} />
                 <Stack.Screen name="ViewStory" component={ViewStory} />

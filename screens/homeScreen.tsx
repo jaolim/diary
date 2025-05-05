@@ -143,7 +143,7 @@ export default function HomeScreen() {
                                             <Title>{item.header}</Title>
                                             <Paragraph>{item.body}</Paragraph>
                                             {item.image != '-1' ? (
-                                                <Card.Cover source={{ uri: item.image }} style={{ minWidth: "30%" }} resizeMode='contain' />
+                                                <Card.Cover source={{ uri: item.image }} style={{ minWidth: "30%", paddingBottom:5 }} resizeMode='contain' />
                                             ) : (
                                                 null
                                             )}

@@ -123,6 +123,11 @@ export default function ViewStory({ route }: any) {
         <ImageBackground source={{ uri: background }} style={styles.center} resizeMode="cover">
             <View style={styles.center}>
                 <View style={styles.row}>
+                    {user ? (
+                        <Text style={styles.user} variant="titleLarge">User: {user}</Text>
+                    ) : (
+                        <Text style={styles.user} variant="titleLarge">User: Guest</Text>
+                    )}
                     <Button style={styles.margin} mode="contained" icon="home" onPress={() => navigation.navigate('Home')}>
                         Home
                     </Button>
@@ -160,18 +165,18 @@ export default function ViewStory({ route }: any) {
                     <View style={styles.column}>
                         {comments.map((item, index) => {
                             return (
-                                <Card style={styles.column}>
+                                <Card style={styles.column} key={index}>
                                     <Card.Title title={`${dayjs(item.time).format('DD/MM/YYYY - HH:mm')} by ${item.user}`} />
-                                        <Card.Content>
-                                            <Paragraph>{item.comment}</Paragraph>
-                                        </Card.Content>
-                                        <Card.Actions>
-                                            {user == item.user ? (
-                                                <IconButton style={styles.marginWhite} icon="trash-can" size={20} onPress={() => deleteComment(item.id)} />
-                                            ) : (
-                                                null
-                                            )}
-                                        </Card.Actions>
+                                    <Card.Content>
+                                        <Paragraph>{item.comment}</Paragraph>
+                                    </Card.Content>
+                                    <Card.Actions>
+                                        {user == item.user ? (
+                                            <IconButton style={styles.marginWhite} icon="trash-can" size={20} onPress={() => deleteComment(item.id)} />
+                                        ) : (
+                                            null
+                                        )}
+                                    </Card.Actions>
                                 </Card>
                             );
                         })}

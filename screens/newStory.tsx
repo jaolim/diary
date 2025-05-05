@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Image, Modal, View } from "react-native";
-import { Button, Text, TextInput, ToggleButton } from "react-native-paper";
+import { Button, Text, TextInput, Title } from "react-native-paper";
 import { useSQLiteContext } from "expo-sqlite";
 import { StackNavigationProp } from '@react-navigation/stack';
 import { CameraView, useCameraPermissions } from "expo-camera";
@@ -205,7 +205,7 @@ export default function NewStory() {
             </Modal>
 
             <CameraView style={{
-                flex: 1, height: 1, width: 230
+                flex: 1, width: 230
             }} ref={camera}
                 pictureSize='720x480'
             />
