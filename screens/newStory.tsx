@@ -50,7 +50,7 @@ export default function NewStory() {
             setImageKey('-1');
             setImageName(photo.uri);
             setImageBase64(photo.base64);
-            setImageId(`Photo_User_${time}`);
+            setImageId(`Photo_${user}_${time}`);
         }
     }
 
